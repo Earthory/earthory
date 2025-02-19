@@ -11,26 +11,21 @@
             font-family: 'Nunito', sans-serif;
             margin: 0;
             padding: 0;
-            background: #000;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/World_map_blank_without_borders.svg/2000px-World_map_blank_without_borders.svg.png') no-repeat center center fixed, 
+                       linear-gradient(45deg, #000, #111);
+            background-size: cover, cover;
+            background-blend-mode: overlay;
+            background-color: #000;
             color: #fff;
             line-height: 1.6;
             overflow-y: auto;
-            min-height: 100vh;
+            min-height: 200vh; /* Extended height for scrolling */
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
+            filter: grayscale(100%) brightness(80%) contrast(120%);
             display: flex;
             flex-direction: column;
-            filter: grayscale(100%) brightness(80%) contrast(120%);
-        }
-
-        #webgl-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
-            z-index: 0;
         }
 
         header {
@@ -54,6 +49,7 @@
             width: 100%;
             z-index: 20;
             margin-top: 60px;
+            min-height: 150vh; /* Ensure longer scrollable area */
         }
 
         .left-panel {
@@ -74,6 +70,7 @@
             background: #222;
             overflow-y: auto;
             max-height: calc(100vh - 60px);
+            min-height: 150vh; /* Match container for scrolling */
         }
 
         .node {
@@ -156,6 +153,7 @@
                 width: 100%;
                 margin-left: 0;
                 padding: 10px;
+                min-height: 100vh; /* Ensure full scroll on mobile */
             }
 
             header, footer {
@@ -185,8 +183,6 @@
         <h1>Earthorian</h1>
     </header>
 
-    <canvas id="webgl-canvas"></canvas>
-
     <div class="container">
         <div class="left-panel">
             <h2>Continents</h2>
@@ -199,11 +195,18 @@
             <div class="node dynamic-effect" onclick="showContent('south-asia')">South Asia</div>
             <div class="node dynamic-effect" onclick="showContent('southeast-asia')">Southeast Asia</div>
             <div class="node dynamic-effect" onclick="showContent('east-asia')">East Asia</div>
+            <!-- Extend with placeholder nodes for longer scroll -->
+            <div class="node" style="visibility: hidden;">Placeholder 1</div>
+            <div class="node" style="visibility: hidden;">Placeholder 2</div>
+            <div class="node" style="visibility: hidden;">Placeholder 3</div>
+            <div class="node" style="visibility: hidden;">Placeholder 4</div>
         </div>
 
         <div class="right-panel">
             <div id="content"></div>
             <div class="infographic" id="infographic"></div>
+            <!-- Extend with placeholder content -->
+            <div style="height: 1000px; visibility: hidden;">Extended Scroll Area</div>
         </div>
     </div>
 
@@ -211,83 +214,8 @@
         <p>© 2025 Earthorian. All rights reserved.</p>
     </footer>
 
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
-        // WebGL Background
-        let glLoaded = false;
-        let glScript = document.createElement('script');
-        glScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/webgl-utils/0.0.15/webgl-utils.min.js';
-        glScript.onload = () => {
-            glLoaded = true;
-            initWebGL();
-        };
-        document.head.appendChild(glScript);
-
-        function initWebGL() {
-            if (!glLoaded) return;
-
-            const canvas = document.getElementById('webgl-canvas');
-            const gl = canvas.getContext('webgl');
-
-            if (!gl) {
-                console.error('WebGL not supported');
-                return;
-            }
-
-            gl.clearColor(0.0, 0.0, 0.0, 0.0);
-            gl.clear(gl.COLOR_BUFFER_BIT);
-
-            // Simple 2D rectangle (simulating a map)
-            const vertices = new Float32Array([
-                -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5
-            ]);
-
-            const vertexBuffer = gl.createBuffer();
-            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
-            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
-
-            const vertexShaderSource = `
-                attribute vec2 a_position;
-                void main() {
-                    gl_Position = vec4(a_position, 0.0, 1.0);
-                    gl_PointSize = 10.0;
-                }
-            `;
-
-            const fragmentShaderSource = `
-                precision highp float;
-                void main() {
-                    gl_FragColor = vec4(0.27, 0.27, 0.27, 0.5); // Gray for map
-                }
-            `;
-
-            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-            gl.shaderSource(vertexShader, vertexShaderSource);
-            gl.compileShader(vertexShader);
-
-            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-            gl.shaderSource(fragmentShader, fragmentShaderSource);
-            gl.compileShader(fragmentShader);
-
-            const program = gl.createProgram();
-            gl.attachShader(program, vertexShader);
-            gl.attachShader(program, fragmentShader);
-            gl.linkProgram(program);
-            gl.useProgram(program);
-
-            const positionLocation = gl.getAttribLocation(program, "a_position");
-            gl.enableVertexAttribArray(positionLocation);
-            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-
-            function render() {
-                gl.clear(gl.COLOR_BUFFER_BIT);
-                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-                requestAnimationFrame(render);
-            }
-
-            render();
-        }
-
-        // D3.js Transitions
         let sidebarOpen = false;
 
         function showContent(id) {
