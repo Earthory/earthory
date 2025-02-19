@@ -19,9 +19,18 @@
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
-            filter: grayscale(100%) brightness(80%) contrast(120%);
             display: flex;
             flex-direction: column;
+            filter: grayscale(100%) brightness(80%) contrast(120%);
+        }
+
+        #webgl-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: 0;
         }
 
         header {
@@ -44,7 +53,7 @@
             flex: 1;
             width: 100%;
             z-index: 20;
-            margin-top: 60px; /* Account for header */
+            margin-top: 60px;
         }
 
         .left-panel {
@@ -161,7 +170,6 @@
             }
         }
 
-        /* Dynamic Effects */
         .dynamic-effect {
             transition: all 0.3s ease;
         }
@@ -176,6 +184,8 @@
     <header>
         <h1>Earthorian</h1>
     </header>
+
+    <canvas id="webgl-canvas"></canvas>
 
     <div class="container">
         <div class="left-panel">
@@ -201,45 +211,81 @@
         <p>© 2025 Earthorian. All rights reserved.</p>
     </footer>
 
-    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
-        // Fallback for Three.js if CDN fails
-        let threeLoaded = false;
-        let threeScript = document.createElement('script');
-        threeScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js';
-        threeScript.onload = () => threeLoaded = true;
-        document.head.appendChild(threeScript);
-
-        // Three.js Background (if loaded)
-        function initThree() {
-            if (!threeLoaded) return;
-
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            document.body.appendChild(renderer.domElement);
-
-            const geometry = new THREE.SphereGeometry(200, 32, 32);
-            const material = new THREE.MeshBasicMaterial({ color: 0x444444, wireframe: true });
-            const sphere = new THREE.Mesh(geometry, material);
-            scene.add(sphere);
-
-            camera.position.z = 500;
-
-            function animate() {
-                requestAnimationFrame(animate);
-                sphere.rotation.x += 0.005;
-                sphere.rotation.y += 0.005;
-                renderer.render(scene, camera);
-            }
-            animate();
-        }
-
-        window.onload = () => {
-            if (threeLoaded) initThree();
-            else console.warn('Three.js failed to load, skipping 3D background.');
+        // WebGL Background
+        let glLoaded = false;
+        let glScript = document.createElement('script');
+        glScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/webgl-utils/0.0.15/webgl-utils.min.js';
+        glScript.onload = () => {
+            glLoaded = true;
+            initWebGL();
         };
+        document.head.appendChild(glScript);
+
+        function initWebGL() {
+            if (!glLoaded) return;
+
+            const canvas = document.getElementById('webgl-canvas');
+            const gl = canvas.getContext('webgl');
+
+            if (!gl) {
+                console.error('WebGL not supported');
+                return;
+            }
+
+            gl.clearColor(0.0, 0.0, 0.0, 0.0);
+            gl.clear(gl.COLOR_BUFFER_BIT);
+
+            // Simple 2D rectangle (simulating a map)
+            const vertices = new Float32Array([
+                -0.5, -0.5, 0.5, -0.5, -0.5, 0.5, 0.5, 0.5
+            ]);
+
+            const vertexBuffer = gl.createBuffer();
+            gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+            gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
+
+            const vertexShaderSource = `
+                attribute vec2 a_position;
+                void main() {
+                    gl_Position = vec4(a_position, 0.0, 1.0);
+                    gl_PointSize = 10.0;
+                }
+            `;
+
+            const fragmentShaderSource = `
+                precision highp float;
+                void main() {
+                    gl_FragColor = vec4(0.27, 0.27, 0.27, 0.5); // Gray for map
+                }
+            `;
+
+            const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+            gl.shaderSource(vertexShader, vertexShaderSource);
+            gl.compileShader(vertexShader);
+
+            const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+            gl.shaderSource(fragmentShader, fragmentShaderSource);
+            gl.compileShader(fragmentShader);
+
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            gl.useProgram(program);
+
+            const positionLocation = gl.getAttribLocation(program, "a_position");
+            gl.enableVertexAttribArray(positionLocation);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            function render() {
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+                requestAnimationFrame(render);
+            }
+
+            render();
+        }
 
         // D3.js Transitions
         let sidebarOpen = false;
@@ -250,7 +296,10 @@
             d3.select(contentDiv).interrupt().transition().duration(500).style('opacity', 0).on('end', () => {
                 try {
                     console.log(`Attempting to fetch: ${id}.txt`);
-                    d3.json(`/${id}.txt`).then(text => {
+                    fetch(`${id}.txt`).then(response => {
+                        if (!response.ok) throw new Error(`File ${id}.txt not found: ${response.status}`);
+                        return response.text();
+                    }).then(text => {
                         contentDiv.style.display = 'block';
                         contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>${text}</p>`;
                         showInfographic(id);
@@ -281,8 +330,7 @@
                 });
             }
 
-            d3.selectAll('.node').classed('active', false);
-            d3.select(event.target).classed('active', true);
+            d3.select(event.target).classed('active', true).transition().duration(300).style('transform', 'scale(1.1)').transition().delay(300).style('transform', 'scale(1)');
         }
 
         function showInfographic(id) {
@@ -331,9 +379,6 @@
             });
         }
 
-        // Dynamic Effects
-        d3.selectAll('.node').classed('dynamic-effect', true);
-
         // Particles and Figures
         for (let i = 0; i < 20; i++) {
             const particle = document.createElement('div');
@@ -367,9 +412,9 @@
 
         document.addEventListener('DOMContentLoaded', initializeAnimations);
 
-        // Handle window resize for responsiveness
+        // Handle window resize
         window.addEventListener('resize', () => {
-            d3.select('#sidebar').style('right', sidebarOpen ? '20px' : '-350px');
+            d3.select('#sidebar').style('right', sidebarOpen ? '0' : '-350px');
         });
     </script>
 </body>
