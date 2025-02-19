@@ -3,128 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>History of the World - Mind Map</title>
+    <title>Calculating Empires: History Visualization</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f9;
+            background-color: #f0f0f5;
             color: #333;
-            text-align: center;
-            overflow-x: auto;
-            min-height: 100vh;
+            overflow: hidden;
+            height: 100vh;
         }
 
         header {
             background-color: #2c3e50;
             color: white;
             padding: 1rem;
+            text-align: center;
         }
 
-        .mind-map {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 20px;
+        #visualization {
             position: relative;
-            width: fit-content;
-            margin: 0 auto;
+            width: 100%;
+            height: calc(100vh - 60px);
+            background-color: #fff;
+            overflow: auto;
+            touch-action: none;
         }
 
         .node {
-            background-color: white;
+            position: absolute;
+            background-color: #fff;
             border: 2px solid #34495e;
             border-radius: 5px;
             padding: 10px 20px;
-            margin: 10px;
             cursor: pointer;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            position: relative;
-            min-width: 150px;
             transition: all 0.3s ease;
-            opacity: 0.8;
-            aria-label: "Click to explore";
+            min-width: 150px;
+            z-index: 10;
         }
 
         .node:hover {
             transform: scale(1.1);
-            opacity: 1;
             background-color: #f1c40f;
             color: white;
         }
 
-        .node:hover::after {
-            content: attr(data-tip);
-            position: absolute;
-            background: #34495e;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            white-space: nowrap;
-        }
-
         .line {
             position: absolute;
-            border-left: 2px dashed #34495e;
+            border-left: 1px dashed #34495e;
             height: 100%;
             left: 50%;
             transform: translateX(-50%);
             top: -10px;
+            z-index: 5;
         }
 
-        .region {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+        .era-node {
+            margin-left: 200px;
+            margin-top: 50px;
         }
 
-        .era {
-            margin-left: 100px;
-        }
-
-        .region-europe .node { background-color: #3498db; color: white; }
-        .region-north-america .node { background-color: #e74c3c; color: white; }
-        .region-latin-america .node { background-color: #f1c40f; color: #333; }
-        .region-middle-east .node { background-color: #9b59b6; color: white; }
-        .region-africa .node { background-color: #2ecc71; color: white; }
-        .region-south-asia .node { background-color: #e67e22; color: white; }
-        .region-southeast-asia .node { background-color: #1abc9c; color: white; }
-        .region-east-asia .node { background-color: #d35400; color: white; }
-
-        .content, #timeline, #comments, #feedback {
-            max-width: 800px;
-            margin: 20px auto;
+        #details {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 300px;
+            background: white;
             padding: 20px;
-            background-color: white;
-            border-radius: 8px;
+            border-radius: 5px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
             display: none;
-        }
-
-        h1, h2, h3 {
-            color: #2c3e50;
-        }
-
-        input, textarea, button {
-            margin: 5px;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-
-        button {
-            background-color: #34495e;
-            color: white;
-            cursor: pointer;
-        }
-
-        button:hover {
-            background-color: #2c3e50;
         }
 
         footer {
@@ -138,272 +90,121 @@
         }
 
         @media (max-width: 800px) {
-            .mind-map {
-                flex-direction: column;
-                align-items: center;
+            #visualization {
+                height: calc(100vh - 100px);
             }
 
-            .node {
-                margin: 5px 0;
+            #details {
+                width: 80%;
+                right: 10px;
             }
 
-            .era {
-                margin-left: 50px;
-            }
-
-            .content, #timeline, #comments, #feedback {
-                margin: 10px;
-                padding: 10px;
+            .node, .era-node {
+                min-width: 100px;
+                padding: 8px 15px;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>History of the World - Mind Map</h1>
+        <h1>Calculating Empires: A Genealogy of History since 1500</h1>
     </header>
 
-    <input type="text" id="searchInput" placeholder="Search region or era..." />
-    <button onclick="searchMindMap()">Search</button>
-
-    <div class="mind-map">
-        <div class="node" data-tip="Click to explore world history" onclick="showContent('world')">World History</div>
-        <div class="region region-europe">
-            <div class="node" data-tip="Click to explore European history" onclick="showContent('europe')">Europe</div>
-            <div class="era line"></div>
-            <div class="node era" data-tip="Ancient European history" onclick="showContent('europe-ancient')">Ancient Europe</div>
-            <div class="node era" data-tip="Medieval European history" onclick="showContent('europe-medieval')">Medieval Europe</div>
-            <div class="node era" data-tip="Modern European history" onclick="showContent('europe-modern')">Modern Europe</div>
-            <div class="node era" data-tip="Contemporary European history" onclick="showContent('europe-contemporary')">Contemporary Europe</div>
+    <div id="visualization">
+        <div class="node" style="left: 50%; top: 50px;" data-id="world" onclick="showDetails('world')">World History</div>
+        <div class="region" style="left: 200px; top: 200px;">
+            <div class="node" data-id="europe" onclick="showDetails('europe')">Europe</div>
+            <div class="line"></div>
+            <div class="node era-node" data-id="europe-1500s" onclick="showDetails('europe-1500s')">1500s: Expansion</div>
+            <div class="node era-node" data-id="europe-1700s" onclick="showDetails('europe-1700s')">1700s: Enlightenment</div>
+            <div class="node era-node" data-id="europe-1900s" onclick="showDetails('europe-1900s')">1900s: Wars</div>
         </div>
 
-        <div class="region region-north-america">
-            <div class="node" data-tip="Click to explore North American history" onclick="showContent('north-america')">North America</div>
-            <div class="era line"></div>
-            <div class="node era" data-tip="Precolonial North American history" onclick="showContent('north-america-precolonial')">Precolonial</div>
-            <div class="node era" data-tip="Colonial North American history" onclick="showContent('north-america-colonial')">Colonial</div>
-            <div class="node era" data-tip="Modern North American history" onclick="showContent('north-america-modern')">Modern</div>
+        <div class="region" style="left: 600px; top: 200px;">
+            <div class="node" data-id="north-america" onclick="showDetails('north-america')">North America</div>
+            <div class="line"></div>
+            <div class="node era-node" data-id="north-america-colonial" onclick="showDetails('north-america-colonial')">Colonial Era</div>
+            <div class="node era-node" data-id="north-america-1800s" onclick="showDetails('north-america-1800s')">1800s: Expansion</div>
+            <div class="node era-node" data-id="north-america-2000s" onclick="showDetails('north-america-2000s')">2000s: Tech</div>
         </div>
 
-        <div class="region region-latin-america">
-            <div class="node" data-tip="Click to explore Latin American history" onclick="showContent('latin-america')">Latin America</div>
-            <div class="era line"></div>
-            <div class="node era" data-tip="Precolonial Latin American history" onclick="showContent('latin-america-precolonial')">Precolonial</div>
-            <div class="node era" data-tip="Colonial Latin American history" onclick="showContent('latin-america-colonial')">Colonial</div>
-            <div class="node era" data-tip="Modern Latin American history" onclick="showContent('latin-america-modern')">Modern</div>
-        </div>
-
-        <div class="region region-middle-east">
-            <div class="node" data-tip="Click to explore Middle Eastern history" onclick="showContent('middle-east')">Middle East</div>
-            <div class="era line"></div>
-            <div class="node era" data-tip="Ancient Middle Eastern history" onclick="showContent('middle-east-ancient')">Ancient Middle East</div>
-            <div class="node era" data-tip="Medieval Middle Eastern history" onclick="showContent('middle-east-medieval')">Medieval Middle East</div>
-            <div class="node era" data-tip="Modern Middle Eastern history" onclick="showContent('middle-east-modern')">Modern Middle East</div>
-        </div>
-
-        <div class="region region-africa">
-            <div class="node" data-tip="Click to explore African history" onclick="showContent('africa')">Africa</div>
-            <div class="era line"></div>
-            <div class="node era" data-tip="Ancient African history" onclick="showContent('africa-ancient')">Ancient Africa</div>
-            <div class="node era" data-tip="Medieval African history" onclick="showContent('africa-medieval')">Medieval Africa</div>
-            <div class="node era" data-tip="Modern African history" onclick="showContent('africa-modern')">Modern Africa</div>
-        </div>
-
-        <div class="region region-south-asia">
-            <div class="node" data-tip="Click to explore South Asian history" onclick="showContent('south-asia')">South Asia</div>
-            <div class="era line"></div>
-            <div class="node era" data-tip="Ancient South Asian history" onclick="showContent('south-asia-ancient')">Ancient South Asia</div>
-            <div class="node era" data-tip="Medieval South Asian history" onclick="showContent('south-asia-medieval')">Medieval South Asia</div>
-            <div class="node era" data-tip="Modern South Asian history" onclick="showContent('south-asia-modern')">Modern South Asia</div>
-        </div>
-
-        <div class="region region-southeast-asia">
-            <div class="node" data-tip="Click to explore Southeast Asian history" onclick="showContent('southeast-asia')">Southeast Asia</div>
-            <div class="era line"></div>
-            <div class="node era" data-tip="Ancient Southeast Asian history" onclick="showContent('southeast-asia-ancient')">Ancient Southeast Asia</div>
-            <div class="node era" data-tip="Medieval Southeast Asian history" onclick="showContent('southeast-asia-medieval')">Medieval Southeast Asia</div>
-            <div class="node era" data-tip="Modern Southeast Asian history" onclick="showContent('southeast-asia-modern')">Modern Southeast Asia</div>
-        </div>
-
-        <div class="region region-east-asia">
-            <div class="node" data-tip="Click to explore East Asian history" onclick="showContent('east-asia')">East Asia</div>
-            <div class="era line"></div>
-            <div class="node era" data-tip="Ancient East Asian history" onclick="showContent('east-asia-ancient')">Ancient East Asia</div>
-            <div class="node era" data-tip="Medieval East Asian history" onclick="showContent('east-asia-medieval')">Medieval East Asia</div>
-            <div class="node era" data-tip="Modern East Asian history" onclick="showContent('east-asia-modern')">Modern East Asia</div>
+        <!-- Add more regions similarly (Latin America, Middle East, etc.) -->
+        <div class="region" style="left: 1000px; top: 200px;">
+            <div class="node" data-id="latin-america" onclick="showDetails('latin-america')">Latin America</div>
+            <div class="line"></div>
+            <div class="node era-node" data-id="latin-america-precolonial" onclick="showDetails('latin-america-precolonial')">Precolonial</div>
+            <div class="node era-node" data-id="latin-america-colonial" onclick="showDetails('latin-america-colonial')">Colonial</div>
+            <div class="node era-node" data-id="latin-america-modern" onclick="showDetails('latin-america-modern')">Modern</div>
         </div>
     </div>
 
-    <div id="content" class="content"></div>
-    <div id="timeline" class="content"></div>
-    <div id="comments" class="content">
-        <textarea id="newComment" placeholder="Leave a comment..."></textarea>
-        <button onclick="addComment()">Post Comment</button>
-    </div>
-    <div id="feedback" class="content">
-        <h3>Feedback</h3>
-        <textarea id="feedbackText" placeholder="What do you think?"></textarea>
-        <button onclick="submitFeedback()">Submit</button>
-    </div>
+    <div id="details"></div>
 
     <footer>
-        <p>© 2025 History of the World Mind Map. All rights reserved.</p>
+        <p>© 2025 Calculating Empires. All rights reserved.</p>
     </footer>
 
     <script>
         let historyData = {
-            'world': 'Explore the overarching history of the world, connecting all regions and eras.',
-            'europe': { text: 'Europe’s history spans ancient civilizations...', image: '' },
-            'europe-ancient': 'Ancient Europe: Greek city-states, Roman Empire (27 BCE–476 CE).',
-            'europe-medieval': 'Medieval Europe: Feudalism, Crusades, Black Death (1347–1351).',
-            'europe-modern': 'Modern Europe: Renaissance, Enlightenment, World Wars.',
-            'europe-contemporary': 'Contemporary Europe: EU formation, post-WWII recovery.',
-            'north-america': { text: 'North America’s history includes Indigenous cultures...', image: '' },
-            'north-america-precolonial': 'Precolonial North America: Native American civilizations like the Maya and Iroquois.',
-            'north-america-colonial': 'Colonial North America: European colonization, American Revolution (1776).',
-            'north-america-modern': 'Modern North America: Industrialization, Civil Rights Movement.',
-            'latin-america': { text: 'Latin America’s history includes precolonial empires...', image: '' },
-            'latin-america-precolonial': 'Precolonial Latin America: Aztecs, Incas, Mayans.',
-            'latin-america-colonial': 'Colonial Latin America: Spanish and Portuguese rule.',
-            'latin-america-modern': 'Modern Latin America: Independence movements, modern economies.',
-            'middle-east': { text: 'The Middle East is a cradle of civilization...', image: '' },
-            'middle-east-ancient': 'Ancient Middle East: Mesopotamia, Egypt, Persian Empire.',
-            'middle-east-medieval': 'Medieval Middle East: Islamic Golden Age, Ottoman Empire.',
-            'middle-east-modern': 'Modern Middle East: Colonialism, oil economy, Arab Spring.',
-            'africa': { text: 'Africa’s history includes ancient kingdoms...', image: '' },
-            'africa-ancient': 'Ancient Africa: Egypt, Nubia, Aksum.',
-            'africa-medieval': 'Medieval Africa: Mali Empire, Great Zimbabwe.',
-            'africa-modern': 'Modern Africa: Colonialism, independence movements, post-colonial challenges.',
-            'south-asia': { text: 'South Asia’s history is marked by ancient empires...', image: '' },
-            'south-asia-ancient': 'Ancient South Asia: Indus Valley, Maurya Empire.',
-            'south-asia-medieval': 'Medieval South Asia: Gupta Empire, Mughal Empire.',
-            'south-asia-modern': 'Modern South Asia: British Raj, independence, modern India.',
-            'southeast-asia': { text: 'Southeast Asia’s history includes ancient kingdoms...', image: '' },
-            'southeast-asia-ancient': 'Ancient Southeast Asia: Khmer Empire, Srivijaya.',
-            'southeast-asia-medieval': 'Medieval Southeast Asia: Majapahit, Ayutthaya.',
-            'southeast-asia-modern': 'Modern Southeast Asia: Colonialism, ASEAN formation.',
-            'east-asia': { text: 'East Asia’s history features dynasties...', image: '' },
-            'east-asia-ancient': 'Ancient East Asia: Shang Dynasty, Han Dynasty.',
-            'east-asia-medieval': 'Medieval East Asia: Tang, Song Dynasties.',
-            'east-asia-modern': 'Modern East Asia: Qing Dynasty, Meiji Restoration, economic rise.'
+            'world': 'Explore the global history of empires, technology, and power since 1500, drawing from Wikipedia’s vast knowledge.',
+            'europe': 'Europe’s history of empire expansion, scientific advancement, and wars, influenced by trade routes and technology.',
+            'europe-1500s': '1500s: European expansion via new trade routes, navigational tools, and colonization, per Wikipedia on European colonization.',
+            'europe-1700s': '1700s: Enlightenment ideas, industrial beginnings, and political revolutions, as noted in Wikipedia’s history articles.',
+            'europe-1900s': '1900s: World Wars, technological advancements, and decline of empires, per Wikipedia’s 20th-century history.',
+            'north-america': 'North America’s history of Indigenous cultures, colonial rule, and technological growth.',
+            'north-america-colonial': 'Colonial Era: European settlement, conflicts with Indigenous peoples, and early governance, per Wikipedia.',
+            'north-america-1800s': '1800s: Westward expansion, railroads, and industrial growth, as detailed on Wikipedia.',
+            'north-america-2000s': '2000s: Dominance in tech and global influence, per Wikipedia’s modern history.',
+            'latin-america': 'Latin America’s history of precolonial empires, colonial rule, and modern independence.',
+            'latin-america-precolonial': 'Precolonial: Aztec, Inca, and Maya civilizations, per Wikipedia’s articles on pre-Columbian America.',
+            'latin-america-colonial': 'Colonial: Spanish and Portuguese domination, per Wikipedia’s colonial history.',
+            'latin-america-modern': 'Modern: Independence movements and contemporary challenges, per Wikipedia.’
         };
-
-        let timelineData = {
-            'europe': [{ title: "Roman Empire", start: "27 BCE", end: "476 CE" }, { title: "Renaissance", start: "14th century" }],
-            'north-america': [{ title: "American Revolution", start: "1776" }],
-            // Add more for other regions
-        };
-
-        let quizzes = {
-            'europe': [{ question: "When did the Roman Empire fall?", options: ["476 CE", "1453 CE", "1492 CE"], answer: "476 CE" }],
-            'north-america': [{ question: "When was the American Revolution?", options: ["1776", "1789", "1800"], answer: "1776" }]
-        };
-
-        let comments = JSON.parse(localStorage.getItem('comments')) || {};
-
-        function showContent(id) {
-            const data = typeof historyData[id] === 'object' ? historyData[id] : { text: historyData[id], image: '' };
-            const contentDiv = document.getElementById('content');
-            contentDiv.style.display = 'block';
-            contentDiv.innerHTML = `
-                <h2>${id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h2>
-                <p>${data.text}</p>
-                ${data.image ? `<img src="${data.image}" alt="${id}" style="max-width: 100%; height: auto;">` : ''}
-            `;
-            showTimeline(id.split('-')[0]);
-            showQuiz(id.split('-')[0]);
-            updateComments(id);
-            contentDiv.scrollIntoView({ behavior: 'smooth' });
-            document.querySelectorAll('.node').forEach(n => n.classList.remove('active'));
-            document.getElementById(id) ?.classList.add('active');
-        }
-
-        function showTimeline(region) {
-            const timelineDiv = document.getElementById('timeline');
-            timelineDiv.style.display = 'block';
-            timelineDiv.innerHTML = timelineData[region]?.map(event => `<p>${event.title} (${event.start}${event.end ? ` - ${event.end}` : ''})</p>`).join('') || '<p>No timeline available.</p>';
-        }
-
-        function showQuiz(region) {
-            if (quizzes[region]) {
-                const quiz = quizzes[region][0];
-                const contentDiv = document.getElementById('content');
-                contentDiv.innerHTML += `
-                    <h3>Quiz Time!</h3>
-                    <p>${quiz.question}</p>
-                    <select id="quizAnswer">
-                        ${quiz.options.map(option => `<option value="${option}">${option}</option>`).join('')}
-                    </select>
-                    <button onclick="checkAnswer('${region}')">Submit</button>
-                    <p id="quizResult"></p>
-                `;
-            }
-        }
-
-        function checkAnswer(region) {
-            const selected = document.getElementById('quizAnswer').value;
-            const quiz = quizzes[region][0];
-            const result = document.getElementById('quizResult');
-            result.innerText = selected === quiz.answer ? "Correct!" : `Wrong. The answer is ${quiz.answer}.`;
-        }
-
-        function addComment() {
-            const region = document.querySelector('.node.active')?.id || 'general';
-            const comment = document.getElementById('newComment').value;
-            if (comment.trim()) {
-                comments[region] = comments[region] || [];
-                comments[region].push({ text: comment, date: new Date().toLocaleString() });
-                localStorage.setItem('comments', JSON.stringify(comments));
-                document.getElementById('newComment').value = '';
-                updateComments(region);
-            }
-        }
-
-        function updateComments(region) {
-            const commentsDiv = document.getElementById('comments');
-            commentsDiv.style.display = 'block';
-            commentsDiv.innerHTML = (comments[region] || []).map(c => `<p>${c.text} - <small>${c.date}</small></p>`).join('') || '<p>No comments yet.</p>';
-        }
-
-        function searchMindMap() {
-            const query = document.getElementById('searchInput').value.toLowerCase();
-            const nodes = document.querySelectorAll('.node');
-            nodes.forEach(node => {
-                const text = node.textContent.toLowerCase();
-                if (text.includes(query)) {
-                    node.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    node.style.backgroundColor = '#f1c40f';
-                    setTimeout(() => node.style.backgroundColor = '', 2000);
-                }
-            });
-        }
-
-        function submitFeedback() {
-            const feedback = document.getElementById('feedbackText').value;
-            alert('Thank you for your feedback: ' + feedback);
-            document.getElementById('feedbackText').value = '';
-        }
 
         let scale = 1;
-        document.querySelector('.mind-map').addEventListener('wheel', (e) => {
+        document.getElementById('visualization').addEventListener('wheel', (e) => {
             e.preventDefault();
             scale += e.deltaY * -0.001;
             scale = Math.min(Math.max(0.125, scale), 4);
-            document.querySelector('.mind-map').style.transform = `scale(${scale})`;
+            document.getElementById('visualization').style.transform = `scale(${scale})`;
         });
 
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowRight') {
-                document.querySelector('.node:focus')?.nextElementSibling?.focus();
+        document.getElementById('visualization').addEventListener('mousedown', (e) => {
+            let startX = e.clientX, startY = e.clientY;
+            let scrollX = document.getElementById('visualization').scrollLeft;
+            let scrollY = document.getElementById('visualization').scrollTop;
+
+            document.getElementById('visualization').addEventListener('mousemove', move);
+            document.addEventListener('mouseup', stop);
+
+            function move(e) {
+                const dx = e.clientX - startX;
+                const dy = e.clientY - startY;
+                document.getElementById('visualization').scrollLeft = scrollX - dx;
+                document.getElementById('visualization').scrollTop = scrollY - dy;
+            }
+
+            function stop() {
+                document.getElementById('visualization').removeEventListener('mousemove', move);
+                document.removeEventListener('mouseup', stop);
             }
         });
 
-        document.querySelectorAll('.node').forEach(node => {
-            node.addEventListener('click', () => {
-                node.focus();
-                node.classList.add('active');
-            });
-        });
+        function showDetails(id) {
+            const detailsDiv = document.getElementById('details');
+            detailsDiv.style.display = 'block';
+            detailsDiv.innerHTML = `
+                <h2>${id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h2>
+                <p>${historyData[id] || 'No details available.'}</p>
+                <button onclick="hideDetails()">Close</button>
+            `;
+            detailsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function hideDetails() {
+            document.getElementById('details').style.display = 'none';
+        }
     </script>
 </body>
 </html>
