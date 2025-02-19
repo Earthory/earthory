@@ -1,0 +1,7 @@
+async function showContent(id) {
+    const response = await fetch(`${id}.txt`);
+    const text = await response.text();
+    document.getElementById('content').style.display = 'block';
+    document.getElementById('content').innerHTML = `<h3>${id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>${text || 'No content available.'}</p>`;
+    document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
+}
