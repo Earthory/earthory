@@ -23,7 +23,7 @@
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
-            filter: grayscale(100%) brightness(100%) contrast(110%); /* Ensure black and white */
+            filter: grayscale(100%) brightness(100%) contrast(110); /* Ensure black and white */
         }
 
         header {
@@ -67,7 +67,9 @@
             border-right: 2px solid #000;
             position: sticky;
             top: 80px;
-            height: calc(100vh - 80px); /* Fixed height, no scroll */
+            height: auto; /* Removed fixed height to prevent cutoff */
+            max-height: calc(100vh - 80px); /* Maximum height to prevent overlap */
+            overflow-y: auto; /* Allow scrolling only if content exceeds viewport */
         }
 
         .right-panel {
@@ -144,18 +146,19 @@
             .left-panel {
                 width: 100%;
                 position: relative;
-                max-height: 200px;
+                max-height: none; /* Remove max-height on mobile */
                 border-right: none;
                 border-bottom: 2px solid #000;
                 top: 0;
-                height: auto; /* Auto height on mobile */
+                height: auto; /* Full height on mobile, scrolls with body */
+                overflow-y: visible; /* Allow content to show */
             }
 
             .right-panel {
                 width: 100%;
                 margin-left: 0;
                 padding: 10px;
-                height: auto; /* Auto height on mobile, fits content */
+                height: auto; /* Full height on mobile */
             }
 
             header, footer {
@@ -212,9 +215,9 @@
         <path d="M480,50 Q400,100 350,150 Q300,200 250,250 Q200,300 150,350 Q100,400 50,450 H0 V500 H960 V0 H480 Z" fill="#FFF" stroke="#000" stroke-width="0.5" />
         <path d="M350,150 Q400,200 450,250" fill="none" stroke="#000" stroke-width="0.5" />
         <path d="M300,200 Q350,250 400,300" fill="none" stroke="#000" stroke-width="0.5" />
-        <!-- Add more paths for other continents, including East Asia and Southeast Asia -->
-        <path d="M200,450 Q250,500 300,550" fill="none" stroke="#000" stroke-width="0.5" /> <!-- East Asia approximation -->
-        <path d="M600,450 Q650,500 700,550" fill="none" stroke="#000" stroke-width="0.5" /> <!-- Southeast Asia approximation -->
+        <path d="M200,450 Q250,500 300,550" fill="none" stroke="#000" stroke-width="0.5" /> <!-- East Asia -->
+        <path d="M600,450 Q650,500 700,550" fill="none" stroke="#000" stroke-width="0.5" /> <!-- Southeast Asia -->
+        <!-- Add more paths for other continents -->
     </svg>
 
     <div class="container">
