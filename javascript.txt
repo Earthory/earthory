@@ -1,0 +1,12 @@
+async function showContent(id) {
+    try {
+        const response = await fetch(`${id}.txt`);
+        const text = await response.text();
+        document.getElementById('content').style.display = 'block';
+        document.getElementById('content').innerHTML = `<h3>${id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>${text || 'No content available.'}</p>`;
+    } catch (error) {
+        document.getElementById('content').style.display = 'block';
+        document.getElementById('content').innerHTML = `<h3>${id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>Error loading content or no file found.</p>`;
+    }
+    document.getElementById('content').scrollIntoView({ behavior: 'smooth' });
+}
