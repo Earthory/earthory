@@ -11,43 +11,53 @@
             font-family: 'Nunito', sans-serif;
             margin: 0;
             padding: 0;
-            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAwIiBoZWlnaHQ9IjEwMDAiPjxwYXRoIGZpbGw9IiMwMDAiIGQ9Ik0wLDANCjE1MCwxNTAgQzUwMCw1MDAsMTAwMCw1MDAsMTUwMCw1MDBDMjAwMCw1MDAsMjAwMCwxMDAwLDIwMDAsMTAwMEwwLDEwMDBZIi8+PHBhdGggc3Ryb2tlPSIjY2NjIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGQ9Ik0wLDAgTDIwMDAsMCAyMDAwLDEwMDAgMCwxMDAwIFoiLz48L3N2Zz4=') no-repeat center center fixed, 
-                       linear-gradient(45deg, #000, #111);
-            background-size: cover, cover;
-            background-blend-mode: overlay;
-            background-color: #000;
+            background: #000;
             color: #fff;
             line-height: 1.6;
-            text-align: center;
             overflow-y: auto;
             min-height: 100vh;
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
+            display: flex;
             filter: grayscale(100%) brightness(80%) contrast(120%);
         }
 
-        .particle, .historical-figure {
+        #threejs-canvas {
             position: absolute;
-            width: 50px;
-            height: 50px;
-            opacity: 0.6;
-            animation: float 5s infinite ease-in-out;
-            z-index: 1;
-        }
-
-        .historical-figure svg {
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 100%;
-            fill: #888;
-            stroke: #ccc;
-            stroke-width: 2;
+            height: 100vh;
+            z-index: 0;
         }
 
-        @keyframes float {
-            0% { transform: translateY(0) translateX(0); opacity: 0.6; }
-            50% { transform: translateY(-50px) translateX(30px); opacity: 0.8; }
-            100% { transform: translateY(0) translateX(0); opacity: 0.6; }
+        .container {
+            display: flex;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .left-panel {
+            width: 300px;
+            padding: 20px;
+            background: #111;
+            border-right: 2px solid #ccc;
+            overflow-y: auto;
+            max-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+        }
+
+        .right-panel {
+            width: calc(100% - 300px);
+            padding: 20px;
+            margin-left: 300px;
+            background: #222;
+            overflow-y: auto;
+            max-height: 100vh;
         }
 
         header {
@@ -60,19 +70,10 @@
             letter-spacing: 2px;
             box-shadow: 0 0 10px #888;
             z-index: 20;
-            animation: fadeIn 0.8s ease-out;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        #visualization {
-            position: relative;
+            position: fixed;
             width: 100%;
-            padding: 50px 0;
-            z-index: 10;
+            top: 0;
+            left: 0;
         }
 
         .node {
@@ -81,15 +82,14 @@
             border: 3px solid #ccc;
             border-radius: 20px;
             padding: 15px 25px;
-            margin: 20px auto;
+            margin: 15px 0;
             cursor: pointer;
             box-shadow: 0 0 10px #888;
             transition: transform 0.3s ease, background 0.3s ease, opacity 0.3s ease;
             text-align: center;
             color: #fff;
             font-size: 18px;
-            max-width: 300px;
-            animation: slideInUp 0.5s ease-out;
+            animation: slideInLeft 0.5s ease-out;
         }
 
         .node:hover, .node.active {
@@ -99,38 +99,9 @@
             opacity: 1;
         }
 
-        .line {
-            display: block;
-            border-top: 3px dashed #ccc;
-            margin: 10px auto;
-            width: 2px;
-            height: 20px;
-            background: transparent;
-            z-index: 5;
-            animation: dash 2s infinite linear;
-        }
-
-        @keyframes dash {
-            to { background-position: 0 -20px; }
-        }
-
-        #sidebar {
-            position: fixed;
-            top: 60px;
-            right: -350px;
-            width: 350px;
-            background: #222;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 15px #888;
-            max-height: calc(100vh - 80px);
-            overflow-y: auto;
-            z-index: 15;
-            transition: right 0.5s ease;
-        }
-
-        #sidebar.open {
-            right: 20px;
+        @keyframes slideInLeft {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         #content, .infographic {
@@ -143,7 +114,7 @@
             box-shadow: 0 0 15px #888;
             text-align: left;
             white-space: pre-wrap;
-            animation: slideInRight 0.5s ease-out;
+            animation: fadeIn 0.5s ease-out;
         }
 
         .infographic {
@@ -156,14 +127,9 @@
             height: auto;
         }
 
-        @keyframes slideInUp {
-            from { transform: translateY(20px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-
-        @keyframes slideInRight {
-            from { transform: translateX(20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         footer {
@@ -175,37 +141,39 @@
             width: 100%;
             margin-top: 20px;
             z-index: 20;
-            animation: fadeIn 0.8s ease-out 0.5s backwards;
+            position: fixed;
+            bottom: 0;
+            left: 0;
         }
 
         @media (max-width: 800px) {
-            #visualization {
-                padding: 20px 0;
+            .container {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                width: 100%;
+                position: relative;
+                max-height: 200px;
+                border-right: none;
+                border-bottom: 2px solid #ccc;
+            }
+
+            .right-panel {
+                width: 100%;
+                margin-left: 0;
+                padding: 10px;
+            }
+
+            header, footer {
+                width: 100%;
+                position: relative;
             }
 
             .node {
                 max-width: 250px;
                 padding: 12px 20px;
                 font-size: 16px;
-            }
-
-            .line {
-                height: 15px;
-            }
-
-            #sidebar {
-                width: 80%;
-                right: -80%;
-                top: 50px;
-            }
-
-            #sidebar.open {
-                right: 10px;
-            }
-
-            .historical-figure, .particle {
-                width: 30px;
-                height: 30px;
             }
         }
     </style>
@@ -215,48 +183,26 @@
         <h1>Earthorian</h1>
     </header>
 
-    <div class="historical-figure" style="top: 10%; left: 15%;">
-        <svg width="50" height="50" viewBox="0 0 100 100">
-            <path d="M50,20 A30,30 0 0,1 80,50 A30,30 0 0,1 50,80 A30,30 0 0,1 20,50 A30,30 0 0,1 50,20 Z" />
-            <line x1="50" y1="80" x2="50" y2="100" stroke="#888" stroke-width="2" />
-        </svg>
-    </div>
-    <div class="historical-figure" style="top: 30%; left: 35%;">
-        <svg width="50" height="50" viewBox="0 0 100 100">
-            <path d="M30,30 Q50,10 70,30 Q70,70 50,90 Q30,70 30,30 Z" />
-            <line x1="50" y1="90" x2="50" y2="100" stroke="#888" stroke-width="2" />
-        </svg>
-    </div>
-    <div class="historical-figure" style="top: 50%; left: 60%;">
-        <svg width="50" height="50" viewBox="0 0 100 100">
-            <rect x="40" y="20" width="20" height="60" />
-            <circle cx="50" cy="15" r="10" />
-        </svg>
-    </div>
-    <div class="historical-figure" style="top: 70%; left: 25%;">
-        <svg width="50" height="50" viewBox="0 0 100 100">
-            <path d="M40,40 Q50,20 60,40 Q60,60 50,80 Q40,60 40,40 Z" />
-            <line x1="50" y1="80" x2="50" y2="100" stroke="#888" stroke-width="2" />
-        </svg>
-    </div>
-    <div class="historical-figure" style="top: 20%; left: 75%;">
-        <svg width="50" height="50" viewBox="0 0 100 100">
-            <ellipse cx="50" cy="50" rx="30" ry="40" />
-            <line x1="50" y1="90" x2="50" y2="100" stroke="#888" stroke-width="2" />
-        </svg>
-    </div>
+    <canvas id="threejs-canvas"></canvas>
 
-    <div class="particle" style="top: 20%; left: 10%;"></div>
-    <div class="particle" style="top: 40%; left: 30%;"></div>
-    <div class="particle" style="top: 60%; left: 70%;"></div>
-    <div class="particle" style="top: 80%; left: 50%;"></div>
+    <div class="container">
+        <div class="left-panel">
+            <h2>Continents</h2>
+            <div class="node" onclick="showContent('world')">World</div>
+            <div class="node" onclick="showContent('europe')">Europe</div>
+            <div class="node" onclick="showContent('north-america')">North America</div>
+            <div class="node" onclick="showContent('latin-america')">Latin America</div>
+            <div class="node" onclick="showContent('middle-east')">Middle East</div>
+            <div class="node" onclick="showContent('africa')">Africa</div>
+            <div class="node" onclick="showContent('south-asia')">South Asia</div>
+            <div class="node" onclick="showContent('southeast-asia')">Southeast Asia</div>
+            <div class="node" onclick="showContent('east-asia')">East Asia</div>
+        </div>
 
-    <div id="visualization"></div>
-
-    <div id="sidebar">
-        <h2>Details</h2>
-        <div id="content"></div>
-        <div class="infographic" id="infographic"></div>
+        <div class="right-panel">
+            <div id="content"></div>
+            <div class="infographic" id="infographic"></div>
+        </div>
     </div>
 
     <footer>
@@ -264,97 +210,67 @@
     </footer>
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
     <script>
-        const width = window.innerWidth, height = 2000; // Tall for scrolling
-        const nodes = [
-            { id: 'world', name: 'World', depth: 0, x: width / 2, y: 100 },
-            { id: 'europe', name: 'Europe', depth: 1, parent: 'world', x: width / 2 - 100, y: 300 },
-            { id: 'north-america', name: 'North America', depth: 1, parent: 'world', x: width / 2 - 50, y: 500 },
-            { id: 'latin-america', name: 'Latin America', depth: 1, parent: 'world', x: width / 2, y: 700 },
-            { id: 'middle-east', name: 'Middle East', depth: 1, parent: 'world', x: width / 2 + 50, y: 900 },
-            { id: 'africa', name: 'Africa', depth: 1, parent: 'world', x: width / 2 + 100, y: 1100 },
-            { id: 'south-asia', name: 'South Asia', depth: 1, parent: 'world', x: width / 2 - 150, y: 1300 },
-            { id: 'southeast-asia', name: 'Southeast Asia', depth: 1, parent: 'world', x: width / 2 + 150, y: 1500 },
-            { id: 'east-asia', name: 'East Asia', depth: 1, parent: 'world', x: width / 2, y: 1700 }
-        ];
+        // Three.js Background
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('threejs-canvas'), alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
 
-        const svg = d3.select("#visualization")
-            .append("svg")
-            .attr("width", width)
-            .attr("height", height)
-            .attr("viewBox", `0 0 ${width} ${height}`);
+        const geometry = new THREE.SphereGeometry(200, 32, 32);
+        const material = new THREE.MeshBasicMaterial({ color: 0x444444, wireframe: true });
+        const sphere = new THREE.Mesh(geometry, material);
+        scene.add(sphere);
 
-        const link = svg.append("g")
-            .selectAll("line")
-            .data(nodes.filter(d => d.parent))
-            .enter().append("line")
-            .attr("x1", d => nodes.find(n => n.id === d.parent).x)
-            .attr("y1", d => nodes.find(n => n.id === d.parent).y)
-            .attr("x2", d => d.x)
-            .attr("y2", d => d.y)
-            .style("stroke", "#ccc")
-            .style("stroke-width", 3)
-            .style("stroke-dasharray", "8")
-            .style("animation", "dash 2s infinite linear");
+        camera.position.z = 500;
 
-        const node = svg.append("g")
-            .selectAll("g")
-            .data(nodes)
-            .enter().append("g")
-            .attr("transform", d => `translate(${d.x},${d.y})`);
+        function animate() {
+            requestAnimationFrame(animate);
+            sphere.rotation.x += 0.005;
+            sphere.rotation.y += 0.005;
+            renderer.render(scene, camera);
+        }
+        animate();
 
-        node.append("rect")
-            .attr("width", 200)
-            .attr("height", 50)
-            .attr("rx", 20) // Rounded corners
-            .attr("ry", 20)
-            .attr("fill", "#444")
-            .attr("stroke", "#ccc")
-            .attr("stroke-width", 3)
-            .attr("class", "node")
-            .on("click", (event, d) => showContent(d.id))
-            .on("mouseover", function() { d3.select(this).style("fill", "#666"); })
-            .on("mouseout", function() { d3.select(this).style("fill", "#444"); });
-
-        node.append("text")
-            .attr("x", 100)
-            .attr("y", 30)
-            .attr("text-anchor", "middle")
-            .text(d => d.name)
-            .attr("fill", "#fff")
-            .attr("font-size", d => d.depth === 0 ? "20px" : "18px");
-
+        // D3.js Transitions and Layout
         let sidebarOpen = false;
 
-        function showSidebar(id) {
-            const sidebar = document.getElementById('sidebar');
-            sidebarOpen = true;
-            sidebar.classList.add('open');
-            showContent(id);
-        }
-
-        async function showContent(id) {
+        function showContent(id) {
             const contentDiv = document.getElementById('content');
             const infographicDiv = document.getElementById('infographic');
-            try {
-                console.log(`Attempting to fetch: ${id}.txt`);
-                const response = await fetch(`${id}.txt`);
-                if (response.ok) {
-                    const text = await response.text();
+            d3.select(contentDiv).transition().duration(500).style('opacity', 0).on('end', () => {
+                try {
+                    console.log(`Attempting to fetch: ${id}.txt`);
+                    fetch(`${id}.txt`).then(response => {
+                        if (!response.ok) throw new Error(`File ${id}.txt not found: ${response.status}`);
+                        return response.text();
+                    }).then(text => {
+                        contentDiv.style.display = 'block';
+                        contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>${text}</p>`;
+                        showInfographic(id);
+                        d3.select(contentDiv).transition().duration(500).style('opacity', 1);
+                    }).catch(error => {
+                        console.error(`Fetch error for ${id}.txt:`, error);
+                        contentDiv.style.display = 'block';
+                        contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>No detailed content available. Ensure the file "${id}.txt" exists in your GitHub repository and is deployed correctly on Netlify. Error: ${error.message}</p>`;
+                        infographicDiv.style.display = 'none';
+                        d3.select(contentDiv).transition().duration(500).style('opacity', 1);
+                    });
+                } catch (error) {
+                    console.error(error);
                     contentDiv.style.display = 'block';
-                    contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>${text}</p>`;
-                    showInfographic(id);
-                } else {
-                    throw new Error(`File ${id}.txt not found or server error: ${response.status}`);
+                    contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>Error loading content.</p>`;
+                    infographicDiv.style.display = 'none';
+                    d3.select(contentDiv).transition().duration(500).style('opacity', 1);
                 }
-            } catch (error) {
-                console.error(`Fetch error for ${id}.txt:`, error);
-                contentDiv.style.display = 'block';
-                contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>No detailed content available. Ensure the file "${id}.txt" exists in your GitHub repository and is deployed correctly on Netlify. Error: ${error.message}</p>`;
-                infographicDiv.style.display = 'none';
+            });
+
+            if (!sidebarOpen) {
+                d3.select('#sidebar').transition().duration(500).style('right', '20px');
+                sidebarOpen = true;
             }
-            document.getElementById('sidebar').classList.add('open');
-            contentDiv.scrollIntoView({ behavior: 'smooth' });
         }
 
         function showInfographic(id) {
@@ -373,34 +289,33 @@
                 default:
                     infographicHTML = '<h4>No Infographic Available</h4>';
             }
-            infographicDiv.style.display = 'block';
-            infographicDiv.innerHTML = infographicHTML;
-            addInfographicHover();
+            d3.select(infographicDiv).transition().duration(500).style('opacity', 0).on('end', () => {
+                infographicDiv.style.display = 'block';
+                infographicDiv.innerHTML = infographicHTML;
+                d3.select(infographicDiv).transition().duration(500).style('opacity', 1);
+                addInfographicHover();
+            });
         }
 
         function addInfographicHover() {
-            document.querySelectorAll('.infographic rect').forEach(rect => {
-                rect.addEventListener('mouseover', () => {
-                    const tip = rect.getAttribute('data-tip');
-                    rect.setAttribute('fill', '#888');
-                    const tooltip = document.createElement('div');
-                    tooltip.style.position = 'absolute';
-                    tooltip.style.background = '#333';
-                    tooltip.style.color = '#fff';
-                    tooltip.style.padding = '5px';
-                    tooltip.style.borderRadius = '5px';
-                    tooltip.style.fontSize = '12px';
-                    tooltip.style.zIndex = '1000';
-                    tooltip.textContent = tip;
-                    tooltip.style.left = (rect.getBoundingClientRect().left + window.scrollX) + 'px';
-                    tooltip.style.top = (rect.getBoundingClientRect().top + window.scrollY - 30) + 'px';
-                    document.body.appendChild(tooltip);
-                });
-
-                rect.addEventListener('mouseout', () => {
-                    rect.setAttribute('fill', '#666');
-                    document.querySelectorAll('.tooltip').forEach(t => t.remove());
-                });
+            d3.selectAll('.infographic rect').on('mouseover', function() {
+                const tip = d3.select(this).attr('data-tip');
+                d3.select(this).transition().duration(200).style('fill', '#888');
+                const tooltip = d3.select('body').append('div')
+                    .attr('class', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('background', '#333')
+                    .style('color', '#fff')
+                    .style('padding', '5px')
+                    .style('border-radius', '5px')
+                    .style('font-size', '12px')
+                    .style('z-index', '1000')
+                    .text(tip)
+                    .style('left', (d3.event.pageX + 10) + 'px')
+                    .style('top', (d3.event.pageY - 20) + 'px');
+            }).on('mouseout', function() {
+                d3.select(this).transition().duration(200).style('fill', '#666');
+                d3.select('.tooltip').remove();
             });
         }
 
@@ -435,18 +350,6 @@
         }
 
         document.addEventListener('DOMContentLoaded', initializeAnimations);
-
-        // Scroll-triggered animations
-        document.addEventListener('scroll', () => {
-            document.querySelectorAll('.node').forEach(node => {
-                const rect = node.getBoundingClientRect();
-                if (rect.top < window.innerHeight && rect.bottom > 0) {
-                    node.classList.add('visible');
-                } else {
-                    node.classList.remove('visible');
-                }
-            });
-        });
     </script>
 </body>
 </html>
