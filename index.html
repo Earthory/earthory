@@ -15,7 +15,7 @@
                        linear-gradient(45deg, #000, #111);
             background-size: cover, cover;
             background-blend-mode: overlay;
-            background-color: #000; /* Ensure black base */
+            background-color: #000;
             color: #fff;
             line-height: 1.6;
             text-align: center;
@@ -24,7 +24,7 @@
             max-width: 1200px;
             margin: 0 auto;
             position: relative;
-            filter: grayscale(100%) brightness(80%) contrast(120%); /* Black, gray, white style */
+            filter: grayscale(100%) brightness(80%) contrast(120%);
         }
 
         .particle, .historical-figure {
@@ -70,8 +70,8 @@
 
         #mind-map {
             position: relative;
-            width: 800px;
-            height: 800px;
+            width: 1000px; /* Increased size for better visibility */
+            height: 1000px; /* Increased size for better visibility */
             margin: 50px auto;
             z-index: 10;
         }
@@ -79,47 +79,47 @@
         .node {
             position: absolute;
             background: #444;
-            border: 2px solid #ccc;
-            border-radius: 15px;
-            padding: 10px 20px;
+            border: 3px solid #ccc; /* Thicker border for visibility */
+            border-radius: 20px; /* Larger radius for better look */
+            padding: 15px 25px; /* Larger padding */
             cursor: pointer;
-            box-shadow: 0 0 5px #888;
+            box-shadow: 0 0 10px #888;
             transition: transform 0.3s ease, background 0.3s ease, opacity 0.3s ease;
             text-align: center;
             color: #fff;
-            font-size: 16px;
+            font-size: 18px; /* Larger text */
             opacity: 0.9;
         }
 
         .node:hover, .node.active {
-            transform: scale(1.1) rotate(2deg);
+            transform: scale(1.15) rotate(2deg); /* Larger scale on hover */
             background: #666;
-            box-shadow: 0 0 10px #fff;
+            box-shadow: 0 0 15px #fff;
             opacity: 1;
         }
 
         .line {
             position: absolute;
             stroke: #ccc;
-            stroke-width: 2;
-            stroke-dasharray: 5;
+            stroke-width: 3; /* Thicker lines */
+            stroke-dasharray: 8;
             animation: dash 2s infinite linear;
             z-index: 5;
         }
 
         @keyframes dash {
-            to { stroke-dashoffset: -10; }
+            to { stroke-dashoffset: -16; }
         }
 
         #sidebar {
             position: fixed;
             top: 60px;
             right: 20px;
-            width: 300px;
+            width: 350px; /* Wider for content */
             background: #222;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 0 10px #888;
+            box-shadow: 0 0 15px #888;
             max-height: calc(100vh - 80px);
             overflow-y: auto;
             z-index: 15;
@@ -138,7 +138,7 @@
             padding: 20px;
             margin-top: 20px;
             border-radius: 15px;
-            box-shadow: 0 0 10px #888;
+            box-shadow: 0 0 15px #888;
             text-align: left;
             white-space: pre-wrap;
             animation: slideInRight 0.5s ease-out;
@@ -173,8 +173,8 @@
 
         @media (max-width: 800px) {
             #mind-map {
-                width: 400px;
-                height: 400px;
+                width: 600px; /* Reduced but still visible */
+                height: 600px;
             }
 
             #sidebar {
@@ -184,24 +184,18 @@
             }
 
             .node {
-                padding: 8px 15px;
-                font-size: 14px;
+                padding: 10px 20px;
+                font-size: 16px;
             }
 
             .historical-figure, .particle {
                 width: 30px;
                 height: 30px;
             }
-        }
 
-        .svg-node {
-            fill: #444;
-            stroke: #ccc;
-            stroke-width: 2;
-        }
-
-        .svg-node:hover {
-            fill: #666;
+            .line {
+                stroke-width: 2;
+            }
         }
     </style>
 </head>
@@ -247,41 +241,41 @@
     <div class="particle" style="top: 80%; left: 50%;"></div>
 
     <div id="mind-map">
-        <svg width="800" height="800" viewBox="0 0 800 800">
-            <circle cx="400" cy="400" r="30" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('world')" />
-            <text x="400" y="405" text-anchor="middle" fill="#fff" font-size="16">World</text>
-            <!-- Position continents on map (approximate geographical locations) -->
-            <line x1="400" y1="400" x2="350" y2="350" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" /> <!-- Europe -->
-            <circle cx="350" cy="350" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('europe')" />
-            <text x="350" y="355" text-anchor="middle" fill="#fff" font-size="14">Europe</text>
+        <svg width="1000" height="1000" viewBox="0 0 1000 1000"> <!-- Larger viewBox for better scaling -->
+            <circle cx="500" cy="500" r="40" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('world')" />
+            <text x="500" y="505" text-anchor="middle" fill="#fff" font-size="20">World</text>
+            <!-- Position continents on map (adjusted for larger viewBox) -->
+            <line x1="500" y1="500" x2="400" y2="400" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Europe -->
+            <circle cx="400" cy="400" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('europe')" />
+            <text x="400" y="405" text-anchor="middle" fill="#fff" font-size="18">Europe</text>
 
-            <line x1="400" y1="400" x2="300" y2="450" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" /> <!-- North America -->
-            <circle cx="300" cy="450" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('north-america')" />
-            <text x="300" y="455" text-anchor="middle" fill="#fff" font-size="14">North America</text>
+            <line x1="500" y1="500" x2="350" y2="450" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- North America -->
+            <circle cx="350" cy="450" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('north-america')" />
+            <text x="350" y="455" text-anchor="middle" fill="#fff" font-size="18">North America</text>
 
-            <line x1="400" y1="400" x2="400" y2="500" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" /> <!-- Latin America -->
-            <circle cx="400" cy="500" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('latin-america')" />
-            <text x="400" y="505" text-anchor="middle" fill="#fff" font-size="14">Latin America</text>
+            <line x1="500" y1="500" x2="500" y2="600" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Latin America -->
+            <circle cx="500" cy="600" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('latin-america')" />
+            <text x="500" y="605" text-anchor="middle" fill="#fff" font-size="18">Latin America</text>
 
-            <line x1="400" y1="400" x2="250" y2="400" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" /> <!-- Middle East -->
-            <circle cx="250" cy="400" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('middle-east')" />
-            <text x="250" y="405" text-anchor="middle" fill="#fff" font-size="14">Middle East</text>
+            <line x1="500" y1="500" x2="300" y2="500" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Middle East -->
+            <circle cx="300" cy="500" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('middle-east')" />
+            <text x="300" y="505" text-anchor="middle" fill="#fff" font-size="18">Middle East</text>
 
-            <line x1="400" y1="400" x2="550" y2="400" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" /> <!-- Africa -->
-            <circle cx="550" cy="400" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('africa')" />
-            <text x="550" y="405" text-anchor="middle" fill="#fff" font-size="14">Africa</text>
+            <line x1="500" y1="500" x2="700" y2="500" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Africa -->
+            <circle cx="700" cy="500" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('africa')" />
+            <text x="700" y="505" text-anchor="middle" fill="#fff" font-size="18">Africa</text>
 
-            <line x1="400" y1="400" x2="200" y2="450" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" /> <!-- South Asia -->
-            <circle cx="200" cy="450" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('south-asia')" />
-            <text x="200" y="455" text-anchor="middle" fill="#fff" font-size="14">South Asia</text>
+            <line x1="500" y1="500" x2="250" y2="550" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- South Asia -->
+            <circle cx="250" cy="550" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('south-asia')" />
+            <text x="250" y="555" text-anchor="middle" fill="#fff" font-size="18">South Asia</text>
 
-            <line x1="400" y1="400" x2="600" y2="450" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" /> <!-- Southeast Asia -->
-            <circle cx="600" cy="450" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('southeast-asia')" />
-            <text x="600" y="455" text-anchor="middle" fill="#fff" font-size="14">Southeast Asia</text>
+            <line x1="500" y1="500" x2="750" y2="550" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Southeast Asia -->
+            <circle cx="750" cy="550" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('southeast-asia')" />
+            <text x="750" y="555" text-anchor="middle" fill="#fff" font-size="18">Southeast Asia</text>
 
-            <line x1="400" y1="400" x2="150" y2="500" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" /> <!-- East Asia -->
-            <circle cx="150" cy="500" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('east-asia')" />
-            <text x="150" y="505" text-anchor="middle" fill="#fff" font-size="14">East Asia</text>
+            <line x1="500" y1="500" x2="200" y2="600" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- East Asia -->
+            <circle cx="200" cy="600" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('east-asia')" />
+            <text x="200" y="605" text-anchor="middle" fill="#fff" font-size="18">East Asia</text>
         </svg>
     </div>
 
@@ -325,6 +319,7 @@
                 contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>No detailed content available. Ensure the file "${id}.txt" exists in your GitHub repository and is deployed correctly on Netlify. Error: ${error.message}</p>`;
                 infographicDiv.style.display = 'none';
             }
+            contentDiv.scrollIntoView({ behavior: 'smooth' });
         }
 
         function showInfographic(id) {
