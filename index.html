@@ -11,7 +11,7 @@
             font-family: 'Nunito', sans-serif;
             margin: 0;
             padding: 0;
-            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/World_map_blank_without_borders.svg/2000px-World_map_blank_without_borders.svg.png') no-repeat center center fixed, 
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAwIiBoZWlnaHQ9IjEwMDAiPjxwYXRoIGZpbGw9IiMwMDAiIGQ9Ik0wLDANCjE1MCwxNTAgQzUwMCw1MDAsMTAwMCw1MDAsMTUwMCw1MDBDMjAwMCw1MDAsMjAwMCwxMDAwLDIwMDAsMTAwMEwwLDEwMDBaIi8+PHBhdGggc3Ryb2tlPSIjY2NjIiBzdHJva2Utd2lkdGg9IjEiIGZpbGw9Im5vbmUiIGQ9Ik0wLDAgTDIwMDAsMCAyMDAwLDEwMDAgMCwxMDAwIFoiLz48L3N2Zz4=') no-repeat center center fixed, 
                        linear-gradient(45deg, #000, #111);
             background-size: cover, cover;
             background-blend-mode: overlay;
@@ -70,52 +70,17 @@
 
         #mind-map {
             position: relative;
-            width: 1000px; /* Increased size for better visibility */
-            height: 1000px; /* Increased size for better visibility */
+            width: 1000px;
+            height: 800px;
             margin: 50px auto;
             z-index: 10;
-        }
-
-        .node {
-            position: absolute;
-            background: #444;
-            border: 3px solid #ccc; /* Thicker border for visibility */
-            border-radius: 20px; /* Larger radius for better look */
-            padding: 15px 25px; /* Larger padding */
-            cursor: pointer;
-            box-shadow: 0 0 10px #888;
-            transition: transform 0.3s ease, background 0.3s ease, opacity 0.3s ease;
-            text-align: center;
-            color: #fff;
-            font-size: 18px; /* Larger text */
-            opacity: 0.9;
-        }
-
-        .node:hover, .node.active {
-            transform: scale(1.15) rotate(2deg); /* Larger scale on hover */
-            background: #666;
-            box-shadow: 0 0 15px #fff;
-            opacity: 1;
-        }
-
-        .line {
-            position: absolute;
-            stroke: #ccc;
-            stroke-width: 3; /* Thicker lines */
-            stroke-dasharray: 8;
-            animation: dash 2s infinite linear;
-            z-index: 5;
-        }
-
-        @keyframes dash {
-            to { stroke-dashoffset: -16; }
         }
 
         #sidebar {
             position: fixed;
             top: 60px;
             right: 20px;
-            width: 350px; /* Wider for content */
+            width: 350px;
             background: #222;
             padding: 20px;
             border-radius: 15px;
@@ -173,7 +138,7 @@
 
         @media (max-width: 800px) {
             #mind-map {
-                width: 600px; /* Reduced but still visible */
+                width: 600px;
                 height: 600px;
             }
 
@@ -183,19 +148,20 @@
                 top: 50px;
             }
 
-            .node {
-                padding: 10px 20px;
-                font-size: 16px;
-            }
-
             .historical-figure, .particle {
                 width: 30px;
                 height: 30px;
             }
+        }
 
-            .line {
-                stroke-width: 2;
-            }
+        .svg-node {
+            fill: #444;
+            stroke: #ccc;
+            stroke-width: 2;
+        }
+
+        .svg-node:hover {
+            fill: #666;
         }
     </style>
 </head>
@@ -240,44 +206,7 @@
     <div class="particle" style="top: 60%; left: 70%;"></div>
     <div class="particle" style="top: 80%; left: 50%;"></div>
 
-    <div id="mind-map">
-        <svg width="1000" height="1000" viewBox="0 0 1000 1000"> <!-- Larger viewBox for better scaling -->
-            <circle cx="500" cy="500" r="40" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('world')" />
-            <text x="500" y="505" text-anchor="middle" fill="#fff" font-size="20">World</text>
-            <!-- Position continents on map (adjusted for larger viewBox) -->
-            <line x1="500" y1="500" x2="400" y2="400" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Europe -->
-            <circle cx="400" cy="400" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('europe')" />
-            <text x="400" y="405" text-anchor="middle" fill="#fff" font-size="18">Europe</text>
-
-            <line x1="500" y1="500" x2="350" y2="450" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- North America -->
-            <circle cx="350" cy="450" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('north-america')" />
-            <text x="350" y="455" text-anchor="middle" fill="#fff" font-size="18">North America</text>
-
-            <line x1="500" y1="500" x2="500" y2="600" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Latin America -->
-            <circle cx="500" cy="600" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('latin-america')" />
-            <text x="500" y="605" text-anchor="middle" fill="#fff" font-size="18">Latin America</text>
-
-            <line x1="500" y1="500" x2="300" y2="500" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Middle East -->
-            <circle cx="300" cy="500" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('middle-east')" />
-            <text x="300" y="505" text-anchor="middle" fill="#fff" font-size="18">Middle East</text>
-
-            <line x1="500" y1="500" x2="700" y2="500" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Africa -->
-            <circle cx="700" cy="500" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('africa')" />
-            <text x="700" y="505" text-anchor="middle" fill="#fff" font-size="18">Africa</text>
-
-            <line x1="500" y1="500" x2="250" y2="550" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- South Asia -->
-            <circle cx="250" cy="550" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('south-asia')" />
-            <text x="250" y="555" text-anchor="middle" fill="#fff" font-size="18">South Asia</text>
-
-            <line x1="500" y1="500" x2="750" y2="550" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- Southeast Asia -->
-            <circle cx="750" cy="550" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('southeast-asia')" />
-            <text x="750" y="555" text-anchor="middle" fill="#fff" font-size="18">Southeast Asia</text>
-
-            <line x1="500" y1="500" x2="200" y2="600" stroke="#ccc" stroke-width="3" stroke-dasharray="8" class="line" /> <!-- East Asia -->
-            <circle cx="200" cy="600" r="30" fill="#444" stroke="#ccc" stroke-width="3" class="node" onclick="showContent('east-asia')" />
-            <text x="200" y="605" text-anchor="middle" fill="#fff" font-size="18">East Asia</text>
-        </svg>
-    </div>
+    <div id="mind-map"></div>
 
     <div id="sidebar">
         <h2>Details</h2>
@@ -289,7 +218,76 @@
         <p>© 2025 Earthorian. All rights reserved.</p>
     </footer>
 
+    <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
+        const width = 1000, height = 800;
+        const nodes = [
+            { id: 'world', name: 'World', x: width / 2, y: height / 2, r: 40 },
+            { id: 'europe', name: 'Europe', x: 400, y: 400, r: 30 },
+            { id: 'north-america', name: 'North America', x: 350, y: 450, r: 30 },
+            { id: 'latin-america', name: 'Latin America', x: 500, y: 600, r: 30 },
+            { id: 'middle-east', name: 'Middle East', x: 300, y: 500, r: 30 },
+            { id: 'africa', name: 'Africa', x: 700, y: 500, r: 30 },
+            { id: 'south-asia', name: 'South Asia', x: 250, y: 550, r: 30 },
+            { id: 'southeast-asia', name: 'Southeast Asia', x: 750, y: 550, r: 30 },
+            { id: 'east-asia', name: 'East Asia', x: 200, y: 600, r: 30 }
+        ];
+
+        const svg = d3.select("#mind-map")
+            .append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .attr("viewBox", `0 0 ${width} ${height}`);
+
+        const links = [
+            { source: 'world', target: 'europe' },
+            { source: 'world', target: 'north-america' },
+            { source: 'world', target: 'latin-america' },
+            { source: 'world', target: 'middle-east' },
+            { source: 'world', target: 'africa' },
+            { source: 'world', target: 'south-asia' },
+            { source: 'world', target: 'southeast-asia' },
+            { source: 'world', target: 'east-asia' }
+        ];
+
+        const link = svg.append("g")
+            .selectAll("line")
+            .data(links)
+            .enter().append("line")
+            .attr("class", "line")
+            .attr("x1", d => nodes.find(n => n.id === d.source).x)
+            .attr("y1", d => nodes.find(n => n.id === d.source).y)
+            .attr("x2", d => nodes.find(n => n.id === d.target).x)
+            .attr("y2", d => nodes.find(n => n.id === d.target).y)
+            .style("stroke", "#ccc")
+            .style("stroke-width", 3)
+            .style("stroke-dasharray", "8")
+            .style("animation", "dash 2s infinite linear");
+
+        const node = svg.append("g")
+            .selectAll("g")
+            .data(nodes)
+            .enter().append("g")
+            .attr("transform", d => `translate(${d.x},${d.y})`);
+
+        node.append("circle")
+            .attr("r", d => d.r)
+            .attr("fill", "#444")
+            .attr("stroke", "#ccc")
+            .attr("stroke-width", 3)
+            .attr("class", "node")
+            .on("click", (event, d) => showContent(d.id))
+            .on("mouseover", function() { d3.select(this).style("fill", "#666"); })
+            .on("mouseout", function() { d3.select(this).style("fill", "#444"); });
+
+        node.append("text")
+            .attr("dy", ".35em")
+            .attr("text-anchor", "middle")
+            .text(d => d.name)
+            .attr("fill", "#fff")
+            .attr("font-size", d => d.id === 'world' ? "20px" : "18px")
+            .attr("y", d => d.id === 'world' ? 5 : 5);
+
         let sidebarOpen = false;
 
         function showSidebar(id) {
@@ -319,7 +317,6 @@
                 contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>No detailed content available. Ensure the file "${id}.txt" exists in your GitHub repository and is deployed correctly on Netlify. Error: ${error.message}</p>`;
                 infographicDiv.style.display = 'none';
             }
-            contentDiv.scrollIntoView({ behavior: 'smooth' });
         }
 
         function showInfographic(id) {
@@ -335,7 +332,6 @@
                 case 'north-america':
                     infographicHTML = '<h4>North American Milestones</h4><svg width="280" height="100"><rect x="10" y="10" width="60" height="20" fill="#666" data-tip="Columbus (1492)"/><rect x="80" y="10" width="60" height="20" fill="#666" data-tip="Independence (1776)"/><rect x="150" y="10" width="60" height="20" fill="#666" data-tip="Internet Age (1990s)"/></svg>';
                     break;
-                // Add similar cases for other continents
                 default:
                     infographicHTML = '<h4>No Infographic Available</h4>';
             }
@@ -369,22 +365,6 @@
                 });
             });
         }
-
-        document.querySelectorAll('.node').forEach(node => {
-            node.addEventListener('click', () => {
-                node.classList.add('active');
-                setTimeout(() => node.classList.remove('active'), 500);
-                showSidebar(node.getAttribute('onclick').match(/'([^']+)'/)[1]);
-            });
-            node.addEventListener('mouseover', () => {
-                const lines = document.querySelectorAll('.line');
-                lines.forEach(line => line.style.stroke = '#fff');
-            });
-            node.addEventListener('mouseout', () => {
-                const lines = document.querySelectorAll('.line');
-                lines.forEach(line => line.style.stroke = '#ccc');
-            });
-        });
 
         for (let i = 0; i < 20; i++) {
             const particle = document.createElement('div');
