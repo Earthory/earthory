@@ -52,14 +52,14 @@
         header {
             background: #000;
             color: #fff;
-            padding: 2rem;
+            padding: 1rem;
             text-align: center;
             border-bottom: 2px solid #ccc;
             text-transform: uppercase;
             letter-spacing: 2px;
             box-shadow: 0 0 10px #888;
-            z-index: 10;
-            animation: fadeIn 1s ease-out;
+            z-index: 20;
+            animation: fadeIn 0.8s ease-out;
         }
 
         @keyframes fadeIn {
@@ -67,64 +67,59 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .container {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+        #mind-map {
+            position: relative;
+            width: 800px;
+            height: 800px;
+            margin: 50px auto;
             z-index: 10;
         }
 
-        .left-panel {
-            width: 25%;
-            padding: 20px;
-            background: #111;
-            border: 1px solid #ccc;
+        .node {
+            position: absolute;
+            background: #444;
+            border: 2px solid #ccc;
             border-radius: 15px;
-            box-shadow: 0 0 10px #888;
-            overflow-y: auto;
-            max-height: calc(100vh - 200px);
-            z-index: 10;
-            animation: slideInLeft 0.8s ease-out;
-        }
-
-        .right-panel {
-            width: 70%;
-            padding: 20px;
-            background: #222;
-            border: 1px solid #ccc;
-            border-radius: 15px;
-            box-shadow: 0 0 10px #888;
-            overflow-y: auto;
-            max-height: calc(100vh - 200px);
-            z-index: 10;
-            animation: slideInRight 0.8s ease-out;
-        }
-
-        @keyframes slideInLeft {
-            from { transform: translateX(-20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes slideInRight {
-            from { transform: translateX(20px); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .node-svg {
+            padding: 10px 20px;
             cursor: pointer;
-            margin: 10px 0;
-            transition: transform 0.3s ease, filter 0.3s ease;
+            box-shadow: 0 0 5px #888;
+            transition: transform 0.3s ease, background 0.3s ease;
+            text-align: center;
+            color: #fff;
+            font-size: 16px;
         }
 
-        .node-svg:hover {
-            transform: scale(1.05) rotate(2deg);
-            filter: drop-shadow(0 0 10px #fff);
+        .node:hover {
+            transform: scale(1.1) rotate(2deg);
+            background: #666;
+            box-shadow: 0 0 10px #fff;
         }
 
-        .node-svg.active rect {
-            fill: #333;
+        .line {
+            position: absolute;
+            border-left: 2px dashed #ccc;
+            height: 100px; /* Adjustable length */
+            z-index: 5;
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 60px;
+            right: 20px;
+            width: 300px;
+            background: #222;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px #888;
+            max-height: calc(100vh - 80px);
+            overflow-y: auto;
+            z-index: 15;
+            transform: translateX(100%);
+            transition: transform 0.5s ease;
+        }
+
+        #sidebar.open {
+            transform: translateX(0);
         }
 
         #content {
@@ -137,12 +132,12 @@
             box-shadow: 0 0 10px #888;
             text-align: left;
             white-space: pre-wrap;
-            animation: fadeInUp 0.5s ease-out;
+            animation: slideInRight 0.5s ease-out;
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes slideInRight {
+            from { transform: translateX(20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         button {
@@ -171,21 +166,11 @@
             border-top: 2px solid #ccc;
             width: 100%;
             margin-top: 20px;
-            z-index: 10;
-            animation: fadeIn 1s ease-out 0.5s backwards;
+            z-index: 20;
+            animation: fadeIn 0.8s ease-out 0.5s backwards;
         }
 
-        .svg-node {
-            fill: #444;
-            stroke: #ccc;
-            stroke-width: 2;
-        }
-
-        .svg-node:hover {
-            fill: #666;
-        }
-
-        .svg-decor {
+        .svg-node, .svg-decor {
             fill: none;
             stroke: #ccc;
             stroke-width: 1;
@@ -193,16 +178,29 @@
             animation: pulseRotate 6s infinite ease-in-out;
         }
 
-        @keyframes pulseRotate {
-            0% { transform: scale(1) rotate(0deg); opacity: 0.5; }
-            50% { transform: scale(1.1) rotate(180deg); opacity: 0.7; }
-            100% { transform: scale(1) rotate(360deg); opacity: 0.5; }
+        @media (max-width: 800px) {
+            #mind-map {
+                width: 400px;
+                height: 400px;
+            }
+
+            #sidebar {
+                width: 80%;
+                right: 10px;
+                top: 50px;
+            }
+
+            .node {
+                padding: 8px 15px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
     <header>
         <h1>Earthorian</h1>
+        <button onclick="toggleSidebar()">Toggle Details</button>
     </header>
 
     <div class="historical-figure" style="top: 10%; left: 15%;">
@@ -241,54 +239,27 @@
     <div class="particle" style="top: 60%; left: 70%;"></div>
     <div class="particle" style="top: 80%; left: 50%;"></div>
 
-    <div class="container">
-        <div class="left-panel">
-            <h2>Continents</h2>
-            <svg class="node-svg" width="200" height="40" onclick="showContent('world')">
-                <rect x="0" y="0" width="200" height="40" class="svg-node" data-id="world"></rect>
-                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="14">World</text>
-            </svg>
-            <svg class="node-svg" width="200" height="40" onclick="showContent('europe')">
-                <rect x="0" y="0" width="200" height="40" class="svg-node" data-id="europe"></rect>
-                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="14">Europe</text>
-            </svg>
-            <svg class="node-svg" width="200" height="40" onclick="showContent('north-america')">
-                <rect x="0" y="0" width="200" height="40" class="svg-node" data-id="north-america"></rect>
-                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="14">North America</text>
-            </svg>
-            <svg class="node-svg" width="200" height="40" onclick="showContent('latin-america')">
-                <rect x="0" y="0" width="200" height="40" class="svg-node" data-id="latin-america"></rect>
-                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="14">Latin America</text>
-            </svg>
-            <svg class="node-svg" width="200" height="40" onclick="showContent('middle-east')">
-                <rect x="0" y="0" width="200" height="40" class="svg-node" data-id="middle-east"></rect>
-                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="14">Middle East</text>
-            </svg>
-            <svg class="node-svg" width="200" height="40" onclick="showContent('africa')">
-                <rect x="0" y="0" width="200" height="40" class="svg-node" data-id="africa"></rect>
-                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="14">Africa</text>
-            </svg>
-            <svg class="node-svg" width="200" height="40" onclick="showContent('south-asia')">
-                <rect x="0" y="0" width="200" height="40" class="svg-node" data-id="south-asia"></rect>
-                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="14">South Asia</text>
-            </svg>
-            <svg class="node-svg" width="200" height="40" onclick="showContent('southeast-asia')">
-                <rect x="0" y="0" width="200" height="40" class="svg-node" data-id="southeast-asia"></rect>
-                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="14">Southeast Asia</text>
-            </svg>
-            <svg class="node-svg" width="200" height="40" onclick="showContent('east-asia')">
-                <rect x="0" y="0" width="200" height="40" class="svg-node" data-id="east-asia"></rect>
-                <text x="100" y="25" text-anchor="middle" fill="#fff" font-size="14">East Asia</text>
-            </svg>
-        </div>
+    <div id="mind-map">
+        <div class="node" style="left: 50%; top: 50%; transform: translate(-50%, -50%);" onclick="showContent('world')">World</div>
+        <div class="line" style="left: 50%; top: 50%; transform: translate(-50%, 50px);"></div>
+        <div class="node" style="left: 40%; top: 60%;" onclick="showContent('europe')">Europe</div>
+        <div class="line" style="left: 40%; top: 60%; transform: translate(0, 50px);"></div>
+        <div class="node" style="left: 30%; top: 70%;" onclick="showContent('north-america')">North America</div>
+        <div class="node" style="left: 50%; top: 70%;" onclick="showContent('latin-america')">Latin America</div>
+        <div class="node" style="left: 70%; top: 70%;" onclick="showContent('middle-east')">Middle East</div>
+        <div class="node" style="left: 20%; top: 80%;" onclick="showContent('africa')">Africa</div>
+        <div class="node" style="left: 40%; top: 80%;" onclick="showContent('south-asia')">South Asia</div>
+        <div class="node" style="left: 60%; top: 80%;" onclick="showContent('southeast-asia')">Southeast Asia</div>
+        <div class="node" style="left: 80%; top: 80%;" onclick="showContent('east-asia')">East Asia</div>
+    </div>
 
-        <div class="right-panel">
-            <h2>Details</h2>
-            <div id="content"></div>
-            <svg class="svg-decor" width="200" height="200" viewBox="0 0 200 200">
-                <circle cx="100" cy="100" r="90" />
-            </svg>
-        </div>
+    <div id="sidebar">
+        <h2>Details</h2>
+        <div id="content"></div>
+        <svg class="svg-decor" width="200" height="200" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="90" />
+        </svg>
+        <button onclick="toggleSidebar()">Close</button>
     </div>
 
     <footer>
@@ -296,6 +267,14 @@
     </footer>
 
     <script>
+        let sidebarOpen = false;
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebarOpen = !sidebarOpen;
+            sidebar.classList.toggle('open');
+        }
+
         async function showContent(id) {
             const contentDiv = document.getElementById('content');
             try {
@@ -313,15 +292,14 @@
                 contentDiv.style.display = 'block';
                 contentDiv.innerHTML = `<h3>${id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>No detailed content available. Ensure the file "${id}.txt" exists in your GitHub repository and is deployed correctly on Netlify. Error: ${error.message}</p>`;
             }
+            toggleSidebar(); // Open sidebar with content
             contentDiv.scrollIntoView({ behavior: 'smooth' });
         }
 
-        document.querySelectorAll('.node-svg').forEach(svg => {
-            svg.addEventListener('click', () => {
-                const nodeId = svg.querySelector('rect').getAttribute('data-id');
-                showContent(nodeId);
-                document.querySelectorAll('.node-svg').forEach(n => n.classList.remove('active'));
-                svg.classList.add('active');
+        document.querySelectorAll('.node').forEach(node => {
+            node.addEventListener('click', () => {
+                node.classList.add('active');
+                setTimeout(() => node.classList.remove('active'), 500); // Flash effect
             });
         });
 
@@ -334,7 +312,6 @@
             document.body.appendChild(particle);
         }
 
-        // Ensure figures animate and are visible
         function initializeAnimations() {
             const figures = document.querySelectorAll('.historical-figure');
             figures.forEach(figure => {
