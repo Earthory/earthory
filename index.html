@@ -105,7 +105,7 @@
             to { transform: translateX(0); opacity: 1; }
         }
 
-        #content {
+        #timeline {
             display: none;
             color: #000;
             background: #FFF;
@@ -114,7 +114,6 @@
             border-radius: 15px;
             box-shadow: 0 0 15px #000;
             text-align: left;
-            white-space: pre-wrap;
             animation: fadeIn 0.5s ease-out;
         }
 
@@ -209,7 +208,6 @@
 
     <svg class="svg-map" viewBox="0 0 960 500">
         <path d="M480,50 Q400,100 350,150 Q300,200 250,250 Q200,300 150,350 Q100,400 50,450 H0 V500 H960 V0 H480 Z" fill="#FFF" stroke="#000" stroke-width="0.5" />
-        <!-- Simplified paths for continents; replace with actual SVG map data -->
         <path d="M350,150 Q400,200 450,250" fill="none" stroke="#000" stroke-width="0.5" />
         <path d="M300,200 Q350,250 400,300" fill="none" stroke="#000" stroke-width="0.5" />
         <!-- Add more paths for other continents -->
@@ -218,19 +216,19 @@
     <div class="container">
         <div class="left-panel">
             <h2>Continents</h2>
-            <div class="node dynamic-effect" onclick="showContent('world')">World</div>
-            <div class="node dynamic-effect" onclick="showContent('europe')">Europe</div>
-            <div class="node dynamic-effect" onclick="showContent('north-america')">North America</div>
-            <div class="node dynamic-effect" onclick="showContent('latin-america')">Latin America</div>
-            <div class="node dynamic-effect" onclick="showContent('middle-east')">Middle East</div>
-            <div class="node dynamic-effect" onclick="showContent('africa')">Africa</div>
-            <div class="node dynamic-effect" onclick="showContent('south-asia')">South Asia</div>
-            <div class="node dynamic-effect" onclick="showContent('southeast-asia')">Southeast Asia</div>
-            <div class="node dynamic-effect" onclick="showContent('east-asia')">East Asia</div>
+            <div class="node dynamic-effect" onclick="showTimeline('world')">World</div>
+            <div class="node dynamic-effect" onclick="showTimeline('europe')">Europe</div>
+            <div class="node dynamic-effect" onclick="showTimeline('north-america')">North America</div>
+            <div class="node dynamic-effect" onclick="showTimeline('latin-america')">Latin America</div>
+            <div class="node dynamic-effect" onclick="showTimeline('middle-east')">Middle East</div>
+            <div class="node dynamic-effect" onclick="showTimeline('africa')">Africa</div>
+            <div class="node dynamic-effect" onclick="showTimeline('south-asia')">South Asia</div>
+            <div class="node dynamic-effect" onclick="showTimeline('southeast-asia')">Southeast Asia</div>
+            <div class="node dynamic-effect" onclick="showTimeline('east-asia')">East Asia</div>
         </div>
 
         <div class="right-panel">
-            <div id="content"></div>
+            <div id="timeline"></div>
             <div style="height: 1000px;"></div> <!-- Extended scroll area -->
         </div>
     </div>
@@ -241,52 +239,77 @@
 
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script>
-        let sidebarOpen = false;
+        let timelineOpen = false;
 
-        function showContent(id) {
-            const contentDiv = document.getElementById('content');
-            d3.select(contentDiv).interrupt().transition().duration(500).style('opacity', 0).on('end', () => {
+        function showTimeline(id) {
+            const timelineDiv = document.getElementById('timeline');
+            d3.select(timelineDiv).interrupt().transition().duration(500).style('opacity', 0).on('end', () => {
                 try {
-                    console.log(`Attempting to fetch: ${id}.txt`);
+                    console.log(`Attempting to fetch timeline for: ${id}.txt`);
                     fetch(`${id}.txt`).then(response => {
                         if (!response.ok) throw new Error(`File ${id}.txt not found: ${response.status}`);
                         return response.text();
                     }).then(text => {
-                        contentDiv.style.display = 'block';
-                        contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>${text}</p>`;
-                        d3.select(contentDiv).transition().duration(500).style('opacity', 1);
+                        timelineDiv.style.display = 'block';
+                        const events = text.split('\n').filter(line => line.trim()).map(line => line.trim());
+                        let timelineHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())} Timeline</h3>`;
+                        timelineHTML += '<svg width="100%" height="' + (events.length * 50) + '"><g transform="translate(50,20)">';
+                        events.forEach((event, i) => {
+                            timelineHTML += `<line x1="0" y1="${i * 50}" x2="100" y2="${i * 50}" stroke="#000" stroke-width="2" data-tip="${event}"/>`;
+                            timelineHTML += `<text x="120" y="${i * 50 + 5}" fill="#000" font-size="14">${event}</text>`;
+                        });
+                        timelineHTML += '</g></svg>';
+                        timelineDiv.innerHTML = timelineHTML;
+                        d3.select(timelineDiv).transition().duration(500).style('opacity', 1);
+                        addTimelineHover();
                     }).catch(error => {
                         console.error(`Fetch error for ${id}.txt:`, error);
-                        contentDiv.style.display = 'block';
-                        contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>No detailed content available. Ensure the file "${id}.txt" exists in your GitHub repository and is deployed correctly on Netlify. Error: ${error.message}</p>`;
-                        d3.select(contentDiv).transition().duration(500).style('opacity', 1);
+                        timelineDiv.style.display = 'block';
+                        timelineDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())} Timeline</h3><p>No timeline available. Ensure the file "${id}.txt" exists. Error: ${error.message}</p>`;
+                        d3.select(timelineDiv).transition().duration(500).style('opacity', 1);
                     });
                 } catch (error) {
                     console.error(error);
-                    contentDiv.style.display = 'block';
-                    contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>Error loading content.</p>`;
-                    d3.select(contentDiv).transition().duration(500).style('opacity', 1);
+                    timelineDiv.style.display = 'block';
+                    timelineDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())} Timeline</h3><p>Error loading timeline.</p>`;
+                    d3.select(timelineDiv).transition().duration(500).style('opacity', 1);
                 }
             });
 
-            if (!sidebarOpen) {
-                d3.select('#sidebar').interrupt().transition().duration(500).style('right', '0');
-                sidebarOpen = true;
+            if (!timelineOpen) {
+                timelineOpen = true;
             } else {
-                d3.select('#sidebar').interrupt().transition().duration(500).style('right', '-350px').on('end', () => {
-                    sidebarOpen = false;
-                    showContent(id); // Reopen with new content
+                timelineOpen = false;
+                d3.select(timelineDiv).transition().duration(500).style('opacity', 0).on('end', () => {
+                    timelineDiv.style.display = 'none';
                 });
             }
-
-            d3.select(event.target).classed('active', true).transition().duration(300).style('transform', 'scale(1.1)').transition().delay(300).style('transform', 'scale(1)');
         }
 
-        // Remove infographic-related functions since infographics are removed
-        // addInfographicHover and showInfographic are no longer needed
+        function addTimelineHover() {
+            d3.selectAll('#timeline line').on('mouseover', function() {
+                const tip = d3.select(this).attr('data-tip');
+                d3.select(this).transition().duration(200).style('stroke', '#666');
+                const tooltip = d3.select('body').append('div')
+                    .attr('class', 'tooltip')
+                    .style('position', 'absolute')
+                    .style('background', '#FFF')
+                    .style('color', '#000')
+                    .style('padding', '5px')
+                    .style('border-radius', '5px')
+                    .style('font-size', '12px')
+                    .style('z-index', '1000')
+                    .text(tip)
+                    .style('left', (d3.event.pageX + 10) + 'px')
+                    .style('top', (d3.event.pageY - 20) + 'px');
+            }).on('mouseout', function() {
+                d3.select(this).transition().duration(200).style('stroke', '#000');
+                d3.select('.tooltip').remove();
+            });
+        }
 
-        // Particles and Figures (simplified)
-        for (let i = 0; i < 10; i++) { // Reduced for performance
+        // Particles and Figures
+        for (let i = 0; i < 10; i++) {
             const particle = document.createElement('div');
             particle.className = 'particle';
             particle.style.top = `${Math.random() * 100}%`;
@@ -328,11 +351,6 @@
                     node.classList.remove('visible');
                 }
             });
-        });
-
-        // Ensure sidebar stays open on scroll
-        window.addEventListener('resize', () => {
-            d3.select('#sidebar').style('right', sidebarOpen ? '0' : '-350px');
         });
     </script>
 </body>
