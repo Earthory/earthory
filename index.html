@@ -65,6 +65,10 @@
             filter: drop-shadow(0 0 10px #00ffcc);
         }
 
+        .node-svg.active rect {
+            fill: #333;
+        }
+
         #content {
             display: none;
             color: #00ffcc;
@@ -74,7 +78,7 @@
             border-radius: 10px;
             box-shadow: 0 0 15px #00ffcc;
             text-align: left;
-            white-space: pre-wrap; /* Preserve formatting for long text */
+            white-space: pre-wrap;
         }
 
         footer {
@@ -202,7 +206,7 @@
             'world': 'World History: Over thousands of years, human civilizations have evolved... [Condensed version, expand to 10,000 words].',
             'europe': `Europe: From the Greeks to the European Union
 
-The history of Europe, as documented on Wikipedia, spans from the ancient civilizations of Greece to the modern European Union, reflecting a tapestry of cultural, technological, and political transformations. This account, aimed at reaching approximately 10,000 words, begins with the Greeks around the 8th century BCE and concludes with the establishment and expansion of the European Union in the late 20th and early 21st centuries.
+The history of Europe, as documented on Wikipedia, spans from the ancient civilizations of Greece to the modern European Union, reflecting a tapestry of cultural, technological, and political transformations. This account begins with the Greeks around the 8th century BCE and concludes with the establishment and expansion of the European Union in the late 20th and early 21st centuries.
 
 **Ancient Greece (8th century BCE - 146 BCE):**  
 The story of Europe starts with Ancient Greece, a cradle of Western civilization. City-states like Athens and Sparta emerged, pioneering democracy, philosophy, and science. Philosophers such as Socrates, Plato, and Aristotle laid intellectual foundations, while the Persian Wars (499-449 BCE) and Peloponnesian War showcased military and political rivalry. Greek culture, including drama, art, and architecture (e.g., Parthenon), influenced the Mediterranean world. By 146 BCE, Greece fell to Rome, but its legacy endured.
@@ -226,9 +230,7 @@ The 19th century saw nationalism rise, with revolutions (1848) and unification o
 World War I (1914-1918) and World War II (1939-1945) devastated Europe, redrawed borders, and led to 50 million deaths. The Cold War (1947-1991) divided Europe into Western (NATO) and Eastern (Warsaw Pact) blocs. Post-war recovery via the Marshall Plan and European integration began with the European Coal and Steel Community (1951), evolving into the European Economic Community (1957).
 
 **European Union (1993 - Present):**  
-The EU, formalized by the Maastricht Treaty (1993), expanded to 27 member states by 2023, promoting peace, trade, and cooperation. The euro (1999) unified currency, but challenges like Brexit (2020), migration crises, and climate change persist. The EU won the Nobel Peace Prize in 2012 for fostering peace after centuries of conflict.
-
-This summary, drawn from Wikipedia, scratches the surface. A full 10,000-word account would delve deeper into each period—e.g., Greek city-state politics, Roman legal codices, medieval trade routes, Renaissance art techniques, Enlightenment philosophies, industrial innovations, war strategies, and EU policies—covering social structures, technologies, and cultural shifts in exhaustive detail.`,
+The EU, formalized by the Maastricht Treaty (1993), expanded to 27 member states by 2023, promoting peace, trade, and cooperation. The euro (1999) unified currency, but challenges like Brexit (2020), migration crises, and climate change persist. The EU won the Nobel Peace Prize in 2012 for fostering peace after centuries of conflict.`,
             'north-america': 'North America’s history includes Indigenous cultures, European colonization, and modern superpower status... [Condensed, expand to 10,000 words].',
             'latin-america': 'Latin America’s history includes precolonial empires, colonial rule, and modern independence... [Condensed, expand to 10,000 words].',
             'middle-east': 'Middle East’s history is a cradle of civilization with Mesopotamia, Egypt, and Persia... [Condensed, expand to 10,000 words].',
@@ -247,11 +249,37 @@ This summary, drawn from Wikipedia, scratches the surface. A full 10,000-word ac
 
         document.querySelectorAll('.node-svg').forEach(svg => {
             svg.addEventListener('click', () => {
-                showContent(svg.querySelector('rect').getAttribute('data-tip').split(' ')[0].toLowerCase());
+                const dataTip = svg.querySelector('rect').getAttribute('data-tip').split(' ')[0].toLowerCase();
+                showContent(dataTip);
                 document.querySelectorAll('.node-svg').forEach(n => n.classList.remove('active'));
                 svg.classList.add('active');
             });
         });
+
+        // Fallback to check if file exists (for future use)
+        async function loadFromFile(id) {
+            try {
+                const response = await fetch(`${id}.txt`);
+                if (response.ok) {
+                    const text = await response.text();
+                    document.getElementById('content').innerHTML = `<h3>${id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>${text}</p>`;
+                } else {
+                    showContent(id); // Fallback to hardcoded data
+                }
+            } catch (error) {
+                showContent(id); // Use hardcoded data if file fails
+            }
+        }
+
+        // Optionally, uncomment this to test file loading instead of hardcoded data
+        // document.querySelectorAll('.node-svg').forEach(svg => {
+        //     svg.addEventListener('click', () => {
+        //         const dataTip = svg.querySelector('rect').getAttribute('data-tip').split(' ')[0].toLowerCase();
+        //         loadFromFile(dataTip);
+        //         document.querySelectorAll('.node-svg').forEach(n => n.classList.remove('active'));
+        //         svg.classList.add('active');
+        //     });
+        // });
     </script>
 </body>
 </html>
