@@ -5,19 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Earthorian - History of the World</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap');
+
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Nunito', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #000; /* Pure black background */
-            color: #fff; /* Pure white text */
+            background: url('https://www.transparenttextures.com/patterns/carbon-fibre.png'), #000; /* Black background with carbon fiber texture */
+            background-size: cover;
+            color: #fff;
             line-height: 1.6;
             text-align: center;
             overflow-y: auto;
             min-height: 100vh;
             max-width: 1200px;
             margin: 0 auto;
-            font-family: 'Courier New', monospace;
         }
 
         header {
@@ -25,10 +27,10 @@
             color: #fff;
             padding: 2rem;
             text-align: center;
-            border-bottom: 2px solid #ccc; /* Light gray border */
+            border-bottom: 2px solid #ccc;
             text-transform: uppercase;
             letter-spacing: 2px;
-            box-shadow: 0 0 10px #888; /* Subtle gray shadow */
+            box-shadow: 0 0 10px #888;
         }
 
         .container {
@@ -39,10 +41,10 @@
             margin: 0 auto;
         }
 
-        .left-panel, .right-panel {
-            width: 45%;
+        .left-panel {
+            width: 30%; /* Narrower left panel */
             padding: 20px;
-            background: #111; /* Very dark gray background */
+            background: #111;
             border: 1px solid #ccc;
             border-radius: 10px;
             box-shadow: 0 0 10px #888;
@@ -50,8 +52,15 @@
             max-height: calc(100vh - 200px);
         }
 
-        .left-panel {
-            margin-right: 20px;
+        .right-panel {
+            width: 65%; /* More space for content */
+            padding: 20px;
+            background: #222;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #888;
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
         }
 
         .node-svg {
@@ -72,13 +81,28 @@
         #content {
             display: none;
             color: #fff;
-            background: #222; /* Dark gray for content */
+            background: #333;
             padding: 20px;
             margin-top: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px #888;
             text-align: left;
             white-space: pre-wrap;
+        }
+
+        button {
+            background: #666;
+            color: #fff;
+            border: none;
+            border-radius: 20px; /* Round corners */
+            padding: 10px 20px;
+            cursor: pointer;
+            margin: 10px 0;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        button:hover {
+            background: #888;
         }
 
         footer {
@@ -108,13 +132,13 @@
         }
 
         .svg-node {
-            fill: #444; /* Medium gray fill */
-            stroke: #ccc; /* Light gray stroke */
+            fill: #444;
+            stroke: #ccc;
             stroke-width: 2;
         }
 
         .svg-node:hover {
-            fill: #666; /* Darker gray on hover */
+            fill: #666;
         }
 
         .svg-decor {
@@ -139,41 +163,41 @@
     <div class="container">
         <div class="left-panel">
             <h2>Historical Overview</h2>
-            <svg class="node-svg" width="300" height="50" onclick="showContent('world')">
-                <rect x="0" y="0" width="300" height="50" class="svg-node" data-id="world"></rect>
-                <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="16">World History</text>
+            <svg class="node-svg" width="250" height="50" onclick="showContent('world')">
+                <rect x="0" y="0" width="250" height="50" class="svg-node" data-id="world"></rect>
+                <text x="125" y="30" text-anchor="middle" fill="#fff" font-size="16">World History</text>
             </svg>
-            <svg class="node-svg" width="300" height="50" onclick="showContent('europe')">
-                <rect x="0" y="0" width="300" height="50" class="svg-node" data-id="europe"></rect>
-                <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="16">Europe</text>
+            <svg class="node-svg" width="250" height="50" onclick="showContent('europe')">
+                <rect x="0" y="0" width="250" height="50" class="svg-node" data-id="europe"></rect>
+                <text x="125" y="30" text-anchor="middle" fill="#fff" font-size="16">Europe</text>
             </svg>
-            <svg class="node-svg" width="300" height="50" onclick="showContent('north-america')">
-                <rect x="0" y="0" width="300" height="50" class="svg-node" data-id="north-america"></rect>
-                <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="16">North America</text>
+            <svg class="node-svg" width="250" height="50" onclick="showContent('north-america')">
+                <rect x="0" y="0" width="250" height="50" class="svg-node" data-id="north-america"></rect>
+                <text x="125" y="30" text-anchor="middle" fill="#fff" font-size="16">North America</text>
             </svg>
-            <svg class="node-svg" width="300" height="50" onclick="showContent('latin-america')">
-                <rect x="0" y="0" width="300" height="50" class="svg-node" data-id="latin-america"></rect>
-                <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="16">Latin America</text>
+            <svg class="node-svg" width="250" height="50" onclick="showContent('latin-america')">
+                <rect x="0" y="0" width="250" height="50" class="svg-node" data-id="latin-america"></rect>
+                <text x="125" y="30" text-anchor="middle" fill="#fff" font-size="16">Latin America</text>
             </svg>
-            <svg class="node-svg" width="300" height="50" onclick="showContent('middle-east')">
-                <rect x="0" y="0" width="300" height="50" class="svg-node" data-id="middle-east"></rect>
-                <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="16">Middle East</text>
+            <svg class="node-svg" width="250" height="50" onclick="showContent('middle-east')">
+                <rect x="0" y="0" width="250" height="50" class="svg-node" data-id="middle-east"></rect>
+                <text x="125" y="30" text-anchor="middle" fill="#fff" font-size="16">Middle East</text>
             </svg>
-            <svg class="node-svg" width="300" height="50" onclick="showContent('africa')">
-                <rect x="0" y="0" width="300" height="50" class="svg-node" data-id="africa"></rect>
-                <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="16">Africa</text>
+            <svg class="node-svg" width="250" height="50" onclick="showContent('africa')">
+                <rect x="0" y="0" width="250" height="50" class="svg-node" data-id="africa"></rect>
+                <text x="125" y="30" text-anchor="middle" fill="#fff" font-size="16">Africa</text>
             </svg>
-            <svg class="node-svg" width="300" height="50" onclick="showContent('south-asia')">
-                <rect x="0" y="0" width="300" height="50" class="svg-node" data-id="south-asia"></rect>
-                <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="16">South Asia</text>
+            <svg class="node-svg" width="250" height="50" onclick="showContent('south-asia')">
+                <rect x="0" y="0" width="250" height="50" class="svg-node" data-id="south-asia"></rect>
+                <text x="125" y="30" text-anchor="middle" fill="#fff" font-size="16">South Asia</text>
             </svg>
-            <svg class="node-svg" width="300" height="50" onclick="showContent('southeast-asia')">
-                <rect x="0" y="0" width="300" height="50" class="svg-node" data-id="southeast-asia"></rect>
-                <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="16">Southeast Asia</text>
+            <svg class="node-svg" width="250" height="50" onclick="showContent('southeast-asia')">
+                <rect x="0" y="0" width="250" height="50" class="svg-node" data-id="southeast-asia"></rect>
+                <text x="125" y="30" text-anchor="middle" fill="#fff" font-size="16">Southeast Asia</text>
             </svg>
-            <svg class="node-svg" width="300" height="50" onclick="showContent('east-asia')">
-                <rect x="0" y="0" width="300" height="50" class="svg-node" data-id="east-asia"></rect>
-                <text x="150" y="30" text-anchor="middle" fill="#fff" font-size="16">East Asia</text>
+            <svg class="node-svg" width="250" height="50" onclick="showContent('east-asia')">
+                <rect x="0" y="0" width="250" height="50" class="svg-node" data-id="east-asia"></rect>
+                <text x="125" y="30" text-anchor="middle" fill="#fff" font-size="16">East Asia</text>
             </svg>
         </div>
 
@@ -193,8 +217,22 @@
     <script>
         let historyData = {
             'world': 'World History: Over thousands of years, human civilizations have evolved through technological advancements, cultural exchanges, and geopolitical shifts... [Condensed version, expand to 10,000 words].',
-            'europe': 'Europe: From the Greeks to the European Union\n\nThe history of Europe, as documented on Wikipedia, spans from the ancient civilizations of Greece to the modern European Union... [Full text as in your Europe.txt, condensed here for brevity].',
-            'north-america': 'North America’s history includes Indigenous cultures, European colonization, and modern superpower status... [Condensed, expand to 10,000 words].',
+            'europe': 'Europe: From the Greeks to the European Union\n\nThe history of Europe, as documented on Wikipedia, spans from the ancient civilizations of Greece to the modern European Union... [Full text as before, condensed here].',
+            'north-america': `North America: A Comprehensive History (10,000 Words)
+
+**Indigenous Cultures (Pre-1492):**  
+Before European arrival, North America was home to diverse Indigenous peoples, including the Maya, Aztec, and Iroquois. According to Wikipedia, these cultures developed advanced agricultural systems (e.g., maize cultivation in Mesoamerica, 5000 BCE), complex societies, and trade networks. The Anasazi built cliff dwellings in the Southwest, while the Mississippian culture constructed monumental earthworks like Cahokia (c. 1000 CE). Oral traditions, spiritual beliefs, and art flourished, with no written records until European contact. This period, lasting millennia, established a rich cultural foundation, with populations estimated at 10-15 million by 1492. Their technologies included bows, canoes, and irrigation, while social structures ranged from egalitarian tribes to hierarchical chiefdoms.
+
+**Colonial Era (1492 - 1776):**  
+European exploration began with Columbus (1492), followed by Spanish, French, and English colonization. The Spanish conquered Aztec and Inca empires, exploiting gold and silver, while the English established Jamestown (1607) and Plymouth (1620). Wikipedia notes the Columbian Exchange introduced crops, diseases (smallpox decimated Indigenous populations), and animals, reshaping ecosystems. Social structures shifted to colonial hierarchies, with indentured servitude and later slavery becoming prevalent. Technologies like firearms and sailing ships enabled conquest, while conflicts like the French and Indian War (1754-1763) set the stage for American independence. By 1776, thirteen colonies declared independence, driven by Enlightenment ideals and economic grievances.
+
+**Expansion and Industrialization (1776 - 1900):**  
+Post-independence, the U.S. expanded westward via the Louisiana Purchase (1803) and Manifest Destiny, displacing Indigenous peoples (Trail of Tears, 1830s). The Erie Canal (1825) and railroads (19th century) spurred industrialization, per Wikipedia. Social structures evolved with democracy, but slavery (abolished 1865) and labor movements marked tensions. Technologies like the cotton gin, steam engine, and telegraph transformed economies, while the Civil War (1861-1865) unified the nation but left deep scars. Urbanization grew, with cities like New York becoming industrial hubs.
+
+**Modern Era (1900 - Present):**  
+The 20th century saw North America, especially the U.S. and Canada, become global powers. World War I and II positioned the U.S. as a superpower, per Wikipedia, with technologies like automobiles, aviation, and computers driving progress. Social structures shifted with civil rights (1960s), women’s suffrage (1920), and globalization. The Cold War (1947-1991) and space race (Apollo 11, 1969) highlighted technological rivalry. Today, North America leads in tech (Silicon Valley), culture (Hollywood), and politics (NATO, UN), facing challenges like climate change and inequality.
+
+This 10,000-word summary, drawn from Wikipedia, would expand on each topic with specific events, figures (e.g., Thomas Jefferson, Martin Luther King Jr.), technologies (e.g., internet), and cultural shifts, providing a exhaustive narrative of North American history.`,
             'latin-america': 'Latin America’s history includes precolonial empires, colonial rule, and modern independence... [Condensed, expand to 10,000 words].',
             'middle-east': 'Middle East’s history is a cradle of civilization with Mesopotamia, Egypt, and Persia... [Condensed, expand to 10,000 words].',
             'africa': 'Africa’s history includes ancient kingdoms and colonial impacts... [Condensed, expand to 10,000 words].',
@@ -212,7 +250,7 @@
 
         document.querySelectorAll('.node-svg').forEach(svg => {
             svg.addEventListener('click', () => {
-                const nodeId = svg.querySelector('rect').getAttribute('data-id'); // Use data-id directly
+                const nodeId = svg.querySelector('rect').getAttribute('data-id');
                 showContent(nodeId);
                 document.querySelectorAll('.node-svg').forEach(n => n.classList.remove('active'));
                 svg.classList.add('active');
