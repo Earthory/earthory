@@ -83,23 +83,31 @@
             padding: 10px 20px;
             cursor: pointer;
             box-shadow: 0 0 5px #888;
-            transition: transform 0.3s ease, background 0.3s ease;
+            transition: transform 0.3s ease, background 0.3s ease, opacity 0.3s ease;
             text-align: center;
             color: #fff;
             font-size: 16px;
+            opacity: 0.9;
         }
 
-        .node:hover {
+        .node:hover, .node.active {
             transform: scale(1.1) rotate(2deg);
             background: #666;
             box-shadow: 0 0 10px #fff;
+            opacity: 1;
         }
 
         .line {
             position: absolute;
-            border-left: 2px dashed #ccc;
-            height: 100px; /* Adjustable length */
+            stroke: #ccc;
+            stroke-width: 2;
+            stroke-dasharray: 5;
+            animation: dash 2s infinite linear;
             z-index: 5;
+        }
+
+        @keyframes dash {
+            to { stroke-dashoffset: -10; }
         }
 
         #sidebar {
@@ -122,7 +130,7 @@
             transform: translateX(0);
         }
 
-        #content {
+        #content, .infographic {
             display: none;
             color: #fff;
             background: #333;
@@ -133,6 +141,16 @@
             text-align: left;
             white-space: pre-wrap;
             animation: slideInRight 0.5s ease-out;
+        }
+
+        .infographic {
+            margin-top: 10px;
+            background: #444;
+        }
+
+        .infographic svg {
+            width: 100%;
+            height: auto;
         }
 
         @keyframes slideInRight {
@@ -170,14 +188,6 @@
             animation: fadeIn 0.8s ease-out 0.5s backwards;
         }
 
-        .svg-node, .svg-decor {
-            fill: none;
-            stroke: #ccc;
-            stroke-width: 1;
-            opacity: 0.5;
-            animation: pulseRotate 6s infinite ease-in-out;
-        }
-
         @media (max-width: 800px) {
             #mind-map {
                 width: 400px;
@@ -193,6 +203,11 @@
             .node {
                 padding: 8px 15px;
                 font-size: 14px;
+            }
+
+            .historical-figure, .particle {
+                width: 30px;
+                height: 30px;
             }
         }
     </style>
@@ -240,25 +255,48 @@
     <div class="particle" style="top: 80%; left: 50%;"></div>
 
     <div id="mind-map">
-        <div class="node" style="left: 50%; top: 50%; transform: translate(-50%, -50%);" onclick="showContent('world')">World</div>
-        <div class="line" style="left: 50%; top: 50%; transform: translate(-50%, 50px);"></div>
-        <div class="node" style="left: 40%; top: 60%;" onclick="showContent('europe')">Europe</div>
-        <div class="line" style="left: 40%; top: 60%; transform: translate(0, 50px);"></div>
-        <div class="node" style="left: 30%; top: 70%;" onclick="showContent('north-america')">North America</div>
-        <div class="node" style="left: 50%; top: 70%;" onclick="showContent('latin-america')">Latin America</div>
-        <div class="node" style="left: 70%; top: 70%;" onclick="showContent('middle-east')">Middle East</div>
-        <div class="node" style="left: 20%; top: 80%;" onclick="showContent('africa')">Africa</div>
-        <div class="node" style="left: 40%; top: 80%;" onclick="showContent('south-asia')">South Asia</div>
-        <div class="node" style="left: 60%; top: 80%;" onclick="showContent('southeast-asia')">Southeast Asia</div>
-        <div class="node" style="left: 80%; top: 80%;" onclick="showContent('east-asia')">East Asia</div>
+        <svg width="800" height="800" viewBox="0 0 800 800">
+            <circle cx="400" cy="400" r="30" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('world')" />
+            <text x="400" y="405" text-anchor="middle" fill="#fff" font-size="16">World</text>
+            <!-- Radial lines and nodes for continents -->
+            <line x1="400" y1="400" x2="400" y2="470" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" />
+            <circle cx="400" cy="470" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('europe')" />
+            <text x="400" y="475" text-anchor="middle" fill="#fff" font-size="14">Europe</text>
+
+            <line x1="400" y1="400" x2="340" y2="470" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" transform="rotate(-45 400 400)" />
+            <circle cx="340" cy="470" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('north-america')" />
+            <text x="340" y="475" text-anchor="middle" fill="#fff" font-size="14">North America</text>
+
+            <line x1="400" y1="400" x2="460" y2="470" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" transform="rotate(45 400 400)" />
+            <circle cx="460" cy="470" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('latin-america')" />
+            <text x="460" y="475" text-anchor="middle" fill="#fff" font-size="14">Latin America</text>
+
+            <line x1="400" y1="400" x2="280" y2="540" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" transform="rotate(-90 400 400)" />
+            <circle cx="280" cy="540" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('middle-east')" />
+            <text x="280" y="545" text-anchor="middle" fill="#fff" font-size="14">Middle East</text>
+
+            <line x1="400" y1="400" x2="520" y2="540" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" transform="rotate(90 400 400)" />
+            <circle cx="520" cy="540" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('africa')" />
+            <text x="520" y="545" text-anchor="middle" fill="#fff" font-size="14">Africa</text>
+
+            <line x1="400" y1="400" x2="220" y2="610" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" transform="rotate(-135 400 400)" />
+            <circle cx="220" cy="610" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('south-asia')" />
+            <text x="220" y="615" text-anchor="middle" fill="#fff" font-size="14">South Asia</text>
+
+            <line x1="400" y1="400" x2="580" y2="610" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" transform="rotate(135 400 400)" />
+            <circle cx="580" cy="610" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('southeast-asia')" />
+            <text x="580" y="615" text-anchor="middle" fill="#fff" font-size="14">Southeast Asia</text>
+
+            <line x1="400" y1="400" x2="160" y2="680" stroke="#ccc" stroke-width="2" stroke-dasharray="5" class="line" transform="rotate(-180 400 400)" />
+            <circle cx="160" cy="680" r="20" fill="#444" stroke="#ccc" stroke-width="2" class="node" onclick="showContent('east-asia')" />
+            <text x="160" y="685" text-anchor="middle" fill="#fff" font-size="14">East Asia</text>
+        </svg>
     </div>
 
     <div id="sidebar">
         <h2>Details</h2>
         <div id="content"></div>
-        <svg class="svg-decor" width="200" height="200" viewBox="0 0 200 200">
-            <circle cx="100" cy="100" r="90" />
-        </svg>
+        <div class="infographic" id="infographic"></div>
         <button onclick="toggleSidebar()">Close</button>
     </div>
 
@@ -277,29 +315,85 @@
 
         async function showContent(id) {
             const contentDiv = document.getElementById('content');
+            const infographicDiv = document.getElementById('infographic');
             try {
                 console.log(`Attempting to fetch: ${id}.txt`);
                 const response = await fetch(`${id}.txt`);
                 if (response.ok) {
                     const text = await response.text();
                     contentDiv.style.display = 'block';
-                    contentDiv.innerHTML = `<h3>${id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>${text}</p>`;
+                    contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>${text}</p>`;
+                    showInfographic(id); // Show infographic for this node
                 } else {
                     throw new Error(`File ${id}.txt not found or server error: ${response.status}`);
                 }
             } catch (error) {
                 console.error(`Fetch error for ${id}.txt:`, error);
                 contentDiv.style.display = 'block';
-                contentDiv.innerHTML = `<h3>${id.replace(/-/g, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>No detailed content available. Ensure the file "${id}.txt" exists in your GitHub repository and is deployed correctly on Netlify. Error: ${error.message}</p>`;
+                contentDiv.innerHTML = `<h3>${id.replace(/-/, ' ').replace(/\b\w/g, c => c.toUpperCase())}</h3><p>No detailed content available. Ensure the file "${id}.txt" exists in your GitHub repository and is deployed correctly on Netlify. Error: ${error.message}</p>`;
+                infographicDiv.style.display = 'none';
             }
-            toggleSidebar(); // Open sidebar with content
+            toggleSidebar();
             contentDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function showInfographic(id) {
+            const infographicDiv = document.getElementById('infographic');
+            let infographicHTML = '';
+            switch(id) {
+                case 'world':
+                    infographicHTML = '<h4>Global Milestones</h4><svg width="280" height="100"><rect x="10" y="10" width="60" height="20" fill="#666" data-tip="Agriculture (9000 BCE)"/><rect x="80" y="10" width="60" height="20" fill="#666" data-tip="Writing (3000 BCE)"/><rect x="150" y="10" width="60" height="20" fill="#666" data-tip="Industrial Revolution (18th C)"/></svg>';
+                    break;
+                case 'europe':
+                    infographicHTML = '<h4>European Milestones</h4><svg width="280" height="100"><rect x="10" y="10" width="60" height="20" fill="#666" data-tip="Renaissance (14th C)"/><rect x="80" y="10" width="60" height="20" fill="#666" data-tip="Enlightenment (18th C)"/><rect x="150" y="10" width="60" height="20" fill="#666" data-tip="EU Formation (1993)"/></svg>';
+                    break;
+                // Add similar cases for other continents
+                default:
+                    infographicHTML = '<h4>No Infographic Available</h4>';
+            }
+            infographicDiv.style.display = 'block';
+            infographicDiv.innerHTML = infographicHTML;
+            addInfographicHover();
+        }
+
+        function addInfographicHover() {
+            document.querySelectorAll('.infographic rect').forEach(rect => {
+                rect.addEventListener('mouseover', () => {
+                    const tip = rect.getAttribute('data-tip');
+                    rect.setAttribute('fill', '#888');
+                    const tooltip = document.createElement('div');
+                    tooltip.style.position = 'absolute';
+                    tooltip.style.background = '#333';
+                    tooltip.style.color = '#fff';
+                    tooltip.style.padding = '5px';
+                    tooltip.style.borderRadius = '5px';
+                    tooltip.style.fontSize = '12px';
+                    tooltip.style.zIndex = '1000';
+                    tooltip.textContent = tip;
+                    tooltip.style.left = (rect.getBoundingClientRect().left + window.scrollX) + 'px';
+                    tooltip.style.top = (rect.getBoundingClientRect().top + window.scrollY - 30) + 'px';
+                    document.body.appendChild(tooltip);
+                });
+
+                rect.addEventListener('mouseout', () => {
+                    rect.setAttribute('fill', '#666');
+                    document.querySelectorAll('.tooltip').forEach(t => t.remove());
+                });
+            });
         }
 
         document.querySelectorAll('.node').forEach(node => {
             node.addEventListener('click', () => {
                 node.classList.add('active');
-                setTimeout(() => node.classList.remove('active'), 500); // Flash effect
+                setTimeout(() => node.classList.remove('active'), 500);
+            });
+            node.addEventListener('mouseover', () => {
+                const lines = document.querySelectorAll('.line');
+                lines.forEach(line => line.style.stroke = '#fff');
+            });
+            node.addEventListener('mouseout', () => {
+                const lines = document.querySelectorAll('.line');
+                lines.forEach(line => line.style.stroke = '#ccc');
             });
         });
 
